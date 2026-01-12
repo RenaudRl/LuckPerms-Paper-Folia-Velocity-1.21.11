@@ -57,89 +57,114 @@ import java.util.concurrent.CompletableFuture;
 /**
  * The LuckPerms API.
  *
- * <p>The API allows other plugins on the server to read and modify LuckPerms
+ * <p>
+ * The API allows other plugins on the server to read and modify LuckPerms
  * data, change behaviour of the plugin, listen to certain events, and integrate
- * LuckPerms into other plugins and systems.</p>
+ * LuckPerms into other plugins and systems.
+ * </p>
  *
- * <p>This interface represents the base of the API package. All functions are
- * accessed via this interface.</p>
+ * <p>
+ * This interface represents the base of the API package. All functions are
+ * accessed via this interface.
+ * </p>
  *
- * <p>To start using the API, you need to obtain an instance of this interface.
+ * <p>
+ * To start using the API, you need to obtain an instance of this interface.
  * These are registered by the LuckPerms plugin to the platforms Services
- * Manager. This is the preferred method for obtaining an instance.</p>
+ * Manager. This is the preferred method for obtaining an instance.
+ * </p>
  *
- * <p>For ease of use, and for platforms without a Service Manager, an instance
+ * <p>
+ * For ease of use, and for platforms without a Service Manager, an instance
  * can also be obtained from the static singleton accessor in
- * {@link LuckPermsProvider}.</p>
+ * {@link LuckPermsProvider}.
+ * </p>
  */
 public interface LuckPerms {
 
     /**
      * Gets the name of this server.
      *
-     * <p>This is defined in the LuckPerms configuration file, and is used for
-     * server specific permission handling.</p>
+     * <p>
+     * This is defined in the LuckPerms configuration file, and is used for
+     * server specific permission handling.
+     * </p>
      *
-     * <p>The default server name is "global".</p>
+     * <p>
+     * The default server name is "global".
+     * </p>
      *
      * @return the server name
      */
-    @NonNull String getServerName();
+    @NonNull
+    String getServerName();
 
     /**
      * Gets the {@link UserManager}, responsible for managing
      * {@link User} instances.
      *
-     * <p>This manager can be used to retrieve instances of {@link User} by uuid
-     * or name, or query all loaded users.</p>
+     * <p>
+     * This manager can be used to retrieve instances of {@link User} by uuid
+     * or name, or query all loaded users.
+     * </p>
      *
      * @return the user manager
      */
-    @NonNull UserManager getUserManager();
+    @NonNull
+    UserManager getUserManager();
 
     /**
      * Gets the {@link GroupManager}, responsible for managing
      * {@link Group} instances.
      *
-     * <p>This manager can be used to retrieve instances of {@link Group} by
-     * name, or query all loaded groups.</p>
+     * <p>
+     * This manager can be used to retrieve instances of {@link Group} by
+     * name, or query all loaded groups.
+     * </p>
      *
      * @return the group manager
      */
-    @NonNull GroupManager getGroupManager();
+    @NonNull
+    GroupManager getGroupManager();
 
     /**
      * Gets the {@link TrackManager}, responsible for managing
      * {@link Track} instances.
      *
-     * <p>This manager can be used to retrieve instances of {@link Track} by
-     * name, or query all loaded tracks.</p>
+     * <p>
+     * This manager can be used to retrieve instances of {@link Track} by
+     * name, or query all loaded tracks.
+     * </p>
      *
      * @return the track manager
      */
-    @NonNull TrackManager getTrackManager();
+    @NonNull
+    TrackManager getTrackManager();
 
     /**
-     * Gets the {@link PlayerAdapter} instance, a utility class for adapting platform Player
+     * Gets the {@link PlayerAdapter} instance, a utility class for adapting
+     * platform Player
      * instances to {@link User}s.
      *
-     * <p>The {@code playerClass} parameter must be equal to the class or interface used by the
-     * server platform to represent players.</p>
+     * <p>
+     * The {@code playerClass} parameter must be equal to the class or interface
+     * used by the
+     * server platform to represent players.
+     * </p>
      *
-     * <p>Specifically:</p>
+     * <p>
+     * Specifically:
+     * </p>
      *
-     * <p></p>
+     * <p>
+     * </p>
      * <ul>
      * <li>{@code org.bukkit.entity.Player}</li>
-     * <li>{@code net.md_5.bungee.api.connection.ProxiedPlayer}</li>
-     * <li>{@code org.spongepowered.api/entity.living.player.Player}</li>
-     * <li>{@code net.minecraft.server.network.ServerPlayerEntity} (Fabric)</li>
-     * <li>{@code cn.nukkit.Player}</li>
      * <li>{@code com.velocitypowered.api.proxy.Player}</li>
      * </ul>
      *
      * @param playerClass the class used by the platform to represent players
-     * @param <T> the player class type
+     * @param <T>         the player class type
      * @return the player adapter
      * @throws IllegalArgumentException if the player class is not correct
      * @since 5.1
@@ -152,7 +177,8 @@ public interface LuckPerms {
      *
      * @return the platform
      */
-    @NonNull Platform getPlatform();
+    @NonNull
+    Platform getPlatform();
 
     /**
      * Gets the {@link PluginMetadata}, responsible for providing metadata about
@@ -160,7 +186,8 @@ public interface LuckPerms {
      *
      * @return the plugin metadata
      */
-    @NonNull PluginMetadata getPluginMetadata();
+    @NonNull
+    PluginMetadata getPluginMetadata();
 
     /**
      * Gets the {@link EventBus}, used for subscribing to internal LuckPerms
@@ -168,18 +195,22 @@ public interface LuckPerms {
      *
      * @return the event bus
      */
-    @NonNull EventBus getEventBus();
+    @NonNull
+    EventBus getEventBus();
 
     /**
      * Gets the {@link MessagingService}, used to dispatch updates throughout a
      * network of servers running the plugin.
      *
-     * <p>Not all instances of LuckPerms will have a messaging service setup and
-     * configured.</p>
+     * <p>
+     * Not all instances of LuckPerms will have a messaging service setup and
+     * configured.
+     * </p>
      *
      * @return the messaging service instance, if present.
      */
-    @NonNull Optional<MessagingService> getMessagingService();
+    @NonNull
+    Optional<MessagingService> getMessagingService();
 
     /**
      * Gets the {@link ActionLogger}, responsible for saving and broadcasting
@@ -187,7 +218,8 @@ public interface LuckPerms {
      *
      * @return the action logger
      */
-    @NonNull ActionLogger getActionLogger();
+    @NonNull
+    ActionLogger getActionLogger();
 
     /**
      * Gets the {@link ContextManager}, responsible for managing
@@ -195,48 +227,60 @@ public interface LuckPerms {
      *
      * @return the context manager
      */
-    @NonNull ContextManager getContextManager();
+    @NonNull
+    ContextManager getContextManager();
 
     /**
      * Gets the {@link MetaStackFactory}.
      *
-     * <p>The metastack factory provides methods for retrieving
+     * <p>
+     * The metastack factory provides methods for retrieving
      * {@link MetaStackElement}s and constructing
-     * {@link MetaStackDefinition}s.</p>
+     * {@link MetaStackDefinition}s.
+     * </p>
      *
      * @return the meta stack factory
      */
-    @NonNull MetaStackFactory getMetaStackFactory();
+    @NonNull
+    MetaStackFactory getMetaStackFactory();
 
     /**
      * Schedules the execution of an update task, and returns an encapsulation
      * of the task as a {@link CompletableFuture}.
      *
-     * <p>The exact actions performed in an update task remains an
+     * <p>
+     * The exact actions performed in an update task remains an
      * implementation detail of the plugin, however, as a minimum, it is
      * expected to perform a full reload of user, group and track data, and
-     * ensure that any changes are fully applied and propagated.</p>
+     * ensure that any changes are fully applied and propagated.
+     * </p>
      *
      * @return a future
      */
-    @NonNull CompletableFuture<Void> runUpdateTask();
+    @NonNull
+    CompletableFuture<Void> runUpdateTask();
 
     /**
      * Executes a health check.
      *
-     * <p>This task checks if the LuckPerms implementation is running and
-     * whether it has a connection to the database (if applicable).</p>
+     * <p>
+     * This task checks if the LuckPerms implementation is running and
+     * whether it has a connection to the database (if applicable).
+     * </p>
      *
      * @return the health status
      * @since 5.5
      */
-    @NonNull Health runHealthCheck();
+    @NonNull
+    Health runHealthCheck();
 
     /**
      * Registers a {@link MessengerProvider} for use by the platform.
      *
-     * <p>Note that the mere action of registering a provider doesn't
-     * necessarily mean that it will be used.</p>
+     * <p>
+     * Note that the mere action of registering a provider doesn't
+     * necessarily mean that it will be used.
+     * </p>
      *
      * @param messengerProvider the messenger provider.
      */
@@ -248,7 +292,8 @@ public interface LuckPerms {
      * @return the node builder registry
      */
     @Internal
-    @NonNull NodeBuilderRegistry getNodeBuilderRegistry();
+    @NonNull
+    NodeBuilderRegistry getNodeBuilderRegistry();
 
     /**
      * Gets the {@link QueryOptionsRegistry}.
@@ -257,7 +302,8 @@ public interface LuckPerms {
      * @since 5.1
      */
     @Internal
-    @NonNull QueryOptionsRegistry getQueryOptionsRegistry();
+    @NonNull
+    QueryOptionsRegistry getQueryOptionsRegistry();
 
     /**
      * Gets the {@link NodeMatcherFactory}.
@@ -266,7 +312,8 @@ public interface LuckPerms {
      * @since 5.1
      */
     @Internal
-    @NonNull NodeMatcherFactory getNodeMatcherFactory();
+    @NonNull
+    NodeMatcherFactory getNodeMatcherFactory();
 
     /**
      * Gets the {@link ActionFilterFactory}.

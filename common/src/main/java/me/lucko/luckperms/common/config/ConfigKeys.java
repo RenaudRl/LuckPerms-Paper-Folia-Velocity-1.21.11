@@ -78,11 +78,14 @@ import static me.lucko.luckperms.common.config.generic.key.ConfigKeyFactory.stri
 /**
  * All of the {@link ConfigKey}s used by LuckPerms.
  *
- * <p>The {@link #getKeys()} method and associated behaviour allows this class
- * to function a bit like an enum, but with generics.</p>
+ * <p>
+ * The {@link #getKeys()} method and associated behaviour allows this class
+ * to function a bit like an enum, but with generics.
+ * </p>
  */
 public final class ConfigKeys {
-    private ConfigKeys() {}
+    private ConfigKeys() {
+    }
 
     /**
      * The name of the server
@@ -143,7 +146,8 @@ public final class ConfigKeys {
     }));
 
     /**
-     * # If the servers own UUID cache/lookup facility should be used when there is no record for a player in the LuckPerms cache.
+     * # If the servers own UUID cache/lookup facility should be used when there is
+     * no record for a player in the LuckPerms cache.
      */
     public static final ConfigKey<Boolean> USE_SERVER_UUID_CACHE = booleanKey("use-server-uuid-cache", false);
 
@@ -155,7 +159,8 @@ public final class ConfigKeys {
     /**
      * If LuckPerms should not require users to confirm bulkupdate operations.
      */
-    public static final ConfigKey<Boolean> SKIP_BULKUPDATE_CONFIRMATION = booleanKey("skip-bulkupdate-confirmation", false);
+    public static final ConfigKey<Boolean> SKIP_BULKUPDATE_CONFIRMATION = booleanKey("skip-bulkupdate-confirmation",
+            false);
 
     /**
      * If LuckPerms should prevent bulkupdate operations.
@@ -168,22 +173,28 @@ public final class ConfigKeys {
     public static final ConfigKey<Boolean> DEBUG_LOGINS = booleanKey("debug-logins", false);
 
     /**
-     * If LP should cancel login attempts for players whose permission data could not be loaded.
+     * If LP should cancel login attempts for players whose permission data could
+     * not be loaded.
      */
     public static final ConfigKey<Boolean> CANCEL_FAILED_LOGINS = booleanKey("cancel-failed-logins", false);
 
     /**
-     * If LuckPerms should update the list of commands sent to the client when permissions are changed.
+     * If LuckPerms should update the list of commands sent to the client when
+     * permissions are changed.
      */
-    public static final ConfigKey<Boolean> UPDATE_CLIENT_COMMAND_LIST = notReloadable(booleanKey("update-client-command-list", true));
+    public static final ConfigKey<Boolean> UPDATE_CLIENT_COMMAND_LIST = notReloadable(
+            booleanKey("update-client-command-list", true));
 
     /**
-     * If LuckPerms should attempt to register "Brigadier" command list data for its commands.
+     * If LuckPerms should attempt to register "Brigadier" command list data for its
+     * commands.
      */
-    public static final ConfigKey<Boolean> REGISTER_COMMAND_LIST_DATA = notReloadable(booleanKey("register-command-list-data", true));
+    public static final ConfigKey<Boolean> REGISTER_COMMAND_LIST_DATA = notReloadable(
+            booleanKey("register-command-list-data", true));
 
     /**
-     * If LuckPerms should attempt to resolve Vanilla command target selectors for LP commands.
+     * If LuckPerms should attempt to resolve Vanilla command target selectors for
+     * LP commands.
      */
     public static final ConfigKey<Boolean> RESOLVE_COMMAND_SELECTORS = booleanKey("resolve-command-selectors", false);
 
@@ -207,7 +218,8 @@ public final class ConfigKeys {
      */
     public static final ConfigKey<String> PRIMARY_GROUP_CALCULATION_METHOD = notReloadable(key(c -> {
         String option = c.getString("primary-group-calculation", "stored").toLowerCase(Locale.ROOT);
-        if (!option.equals("stored") && !option.equals("parents-by-weight") && !option.equals("all-parents-by-weight")) {
+        if (!option.equals("stored") && !option.equals("parents-by-weight")
+                && !option.equals("all-parents-by-weight")) {
             option = "stored";
         }
 
@@ -215,56 +227,67 @@ public final class ConfigKeys {
     }));
 
     /**
-     * A function to create primary group holder instances based upon the {@link #PRIMARY_GROUP_CALCULATION_METHOD} setting.
+     * A function to create primary group holder instances based upon the
+     * {@link #PRIMARY_GROUP_CALCULATION_METHOD} setting.
      */
-    public static final ConfigKey<Function<User, PrimaryGroupHolder>> PRIMARY_GROUP_CALCULATION = notReloadable(key(c -> {
-        String option = PRIMARY_GROUP_CALCULATION_METHOD.get(c);
-        switch (option) {
-            case "stored":
-                return PrimaryGroupHolder.Stored::new;
-            case "parents-by-weight":
-                return PrimaryGroupHolder.ParentsByWeight::new;
-            default:
-                return PrimaryGroupHolder.AllParentsByWeight::new;
-        }
-    }));
+    public static final ConfigKey<Function<User, PrimaryGroupHolder>> PRIMARY_GROUP_CALCULATION = notReloadable(
+            key(c -> {
+                String option = PRIMARY_GROUP_CALCULATION_METHOD.get(c);
+                switch (option) {
+                    case "stored":
+                        return PrimaryGroupHolder.Stored::new;
+                    case "parents-by-weight":
+                        return PrimaryGroupHolder.ParentsByWeight::new;
+                    default:
+                        return PrimaryGroupHolder.AllParentsByWeight::new;
+                }
+            }));
 
     /**
-     * If set to false, the plugin will allow a Users primary group to be removed with the
+     * If set to false, the plugin will allow a Users primary group to be removed
+     * with the
      * 'parent remove' command, and will set their primary group back to default.
      */
-    public static final ConfigKey<Boolean> PREVENT_PRIMARY_GROUP_REMOVAL = booleanKey("prevent-primary-group-removal", true);
+    public static final ConfigKey<Boolean> PREVENT_PRIMARY_GROUP_REMOVAL = booleanKey("prevent-primary-group-removal",
+            true);
 
     /**
      * If the plugin should check for "extra" permissions with users run LP commands
      */
-    public static final ConfigKey<Boolean> USE_ARGUMENT_BASED_COMMAND_PERMISSIONS = booleanKey("argument-based-command-permissions", false);
+    public static final ConfigKey<Boolean> USE_ARGUMENT_BASED_COMMAND_PERMISSIONS = booleanKey(
+            "argument-based-command-permissions", false);
 
     /**
      * If the plugin should check whether senders are a member of a given group
-     * before they're able to edit the groups permissions or add/remove it from other users.
+     * before they're able to edit the groups permissions or add/remove it from
+     * other users.
      */
-    public static final ConfigKey<Boolean> REQUIRE_SENDER_GROUP_MEMBERSHIP_TO_MODIFY = booleanKey("require-sender-group-membership-to-modify", false);
+    public static final ConfigKey<Boolean> REQUIRE_SENDER_GROUP_MEMBERSHIP_TO_MODIFY = booleanKey(
+            "require-sender-group-membership-to-modify", false);
 
     /**
      * If the plugin is in read-only mode for players
      */
-    public static final ConfigKey<Boolean> READ_ONLY_MODE_PLAYERS = booleanKey("commands-read-only-mode.players", false);
+    public static final ConfigKey<Boolean> READ_ONLY_MODE_PLAYERS = booleanKey("commands-read-only-mode.players",
+            false);
 
     /**
      * If the plugin is in read-only mode for the server console
      */
-    public static final ConfigKey<Boolean> READ_ONLY_MODE_CONSOLE = booleanKey("commands-read-only-mode.console", false);
+    public static final ConfigKey<Boolean> READ_ONLY_MODE_CONSOLE = booleanKey("commands-read-only-mode.console",
+            false);
 
     /**
      * If LuckPerms commands are disabled for players
      */
-    public static final ConfigKey<Boolean> DISABLE_LUCKPERMS_COMMANDS_PLAYERS = booleanKey("disable-luckperms-commands.players", false);
+    public static final ConfigKey<Boolean> DISABLE_LUCKPERMS_COMMANDS_PLAYERS = booleanKey(
+            "disable-luckperms-commands.players", false);
 
     /**
      * If LuckPerms commands are disabled for the server console
      */
-    public static final ConfigKey<Boolean> DISABLE_LUCKPERMS_COMMANDS_CONSOLE = booleanKey("disable-luckperms-commands.console", false);
+    public static final ConfigKey<Boolean> DISABLE_LUCKPERMS_COMMANDS_CONSOLE = booleanKey(
+            "disable-luckperms-commands.console", false);
 
     /**
      * If wildcards are being applied
@@ -272,17 +295,10 @@ public final class ConfigKeys {
     public static final ConfigKey<Boolean> APPLYING_WILDCARDS = notReloadable(booleanKey("apply-wildcards", true));
 
     /**
-     * If Sponge's implicit permission inheritance system should be applied
-     */
-    public static final ConfigKey<Boolean> APPLYING_WILDCARDS_SPONGE = notReloadable(key(c -> {
-        boolean def = c.getPlugin().getBootstrap().getType() == Platform.Type.SPONGE;
-        return c.getBoolean("apply-sponge-implicit-wildcards", def);
-    }));
-
-    /**
      * If default negated permissions should be applied before wildcards.
      */
-    public static final ConfigKey<Boolean> APPLY_DEFAULT_NEGATIONS_BEFORE_WILDCARDS = notReloadable(booleanKey("apply-default-negated-permissions-before-wildcards", false));
+    public static final ConfigKey<Boolean> APPLY_DEFAULT_NEGATIONS_BEFORE_WILDCARDS = notReloadable(
+            booleanKey("apply-default-negated-permissions-before-wildcards", false));
 
     /**
      * If regex permissions are being applied
@@ -295,44 +311,36 @@ public final class ConfigKeys {
     public static final ConfigKey<Boolean> APPLYING_SHORTHAND = notReloadable(booleanKey("apply-shorthand", true));
 
     /**
-     * If Bukkit child permissions are being applied. This setting is ignored on other platforms.
+     * If MiniMessage should be used for messages
      */
-    public static final ConfigKey<Boolean> APPLY_BUKKIT_CHILD_PERMISSIONS = notReloadable(booleanKey("apply-bukkit-child-permissions", true));
+    public static final ConfigKey<Boolean> USE_MINIMESSAGE = booleanKey("use-minimessage", true);
 
     /**
-     * If Bukkit default permissions are being applied. This setting is ignored on other platforms.
+     * If MiniMessage should be used for metadata (prefixes, suffixes, etc.)
      */
-    public static final ConfigKey<Boolean> APPLY_BUKKIT_DEFAULT_PERMISSIONS = notReloadable(booleanKey("apply-bukkit-default-permissions", true));
+    public static final ConfigKey<Boolean> USE_MINIMESSAGE_FOR_METADATA = booleanKey("use-minimessage-for-metadata",
+            true);
 
     /**
-     * If Bukkit attachment permissions are being applied. This setting is ignored on other platforms.
+     * If Bukkit child permissions are being applied. This setting is ignored on
+     * other platforms.
      */
-    public static final ConfigKey<Boolean> APPLY_BUKKIT_ATTACHMENT_PERMISSIONS = notReloadable(booleanKey("apply-bukkit-attachment-permissions", true));
+    public static final ConfigKey<Boolean> APPLY_BUKKIT_CHILD_PERMISSIONS = notReloadable(
+            booleanKey("apply-bukkit-child-permissions", true));
 
     /**
-     * If Nukkit child permissions are being applied. This setting is ignored on other platforms.
+     * If Bukkit default permissions are being applied. This setting is ignored on
+     * other platforms.
      */
-    public static final ConfigKey<Boolean> APPLY_NUKKIT_CHILD_PERMISSIONS = notReloadable(booleanKey("apply-nukkit-child-permissions", true));
+    public static final ConfigKey<Boolean> APPLY_BUKKIT_DEFAULT_PERMISSIONS = notReloadable(
+            booleanKey("apply-bukkit-default-permissions", true));
 
     /**
-     * If Nukkit default permissions are being applied. This setting is ignored on other platforms.
+     * If Bukkit attachment permissions are being applied. This setting is ignored
+     * on other platforms.
      */
-    public static final ConfigKey<Boolean> APPLY_NUKKIT_DEFAULT_PERMISSIONS = notReloadable(booleanKey("apply-nukkit-default-permissions", true));
-
-    /**
-     * If Nukkit attachment permissions are being applied. This setting is ignored on other platforms.
-     */
-    public static final ConfigKey<Boolean> APPLY_NUKKIT_ATTACHMENT_PERMISSIONS = notReloadable(booleanKey("apply-nukkit-attachment-permissions", true));
-
-    /**
-     * If BungeeCord configured permissions are being applied. This setting is ignored on other platforms.
-     */
-    public static final ConfigKey<Boolean> APPLY_BUNGEE_CONFIG_PERMISSIONS = notReloadable(booleanKey("apply-bungee-config-permissions", false));
-
-    /**
-     * If Sponge default subjects should be applied
-     */
-    public static final ConfigKey<Boolean> APPLY_SPONGE_DEFAULT_SUBJECTS = notReloadable(booleanKey("apply-sponge-default-subjects", true));
+    public static final ConfigKey<Boolean> APPLY_BUKKIT_ATTACHMENT_PERMISSIONS = notReloadable(
+            booleanKey("apply-bukkit-attachment-permissions", true));
 
     /**
      * The algorithm LuckPerms should use when traversing the "inheritance tree"
@@ -350,17 +358,21 @@ public final class ConfigKeys {
     });
 
     /**
-     * If a final sort according to "inheritance rules" should be performed after the traversal algorithm
+     * If a final sort according to "inheritance rules" should be performed after
+     * the traversal algorithm
      * has resolved the inheritance tree
      */
-    public static final ConfigKey<Boolean> POST_TRAVERSAL_INHERITANCE_SORT = booleanKey("post-traversal-inheritance-sort", false);
+    public static final ConfigKey<Boolean> POST_TRAVERSAL_INHERITANCE_SORT = booleanKey(
+            "post-traversal-inheritance-sort", false);
 
     /**
      * The meta value selector
      */
     public static final ConfigKey<MetaValueSelector> META_VALUE_SELECTOR = key(c -> {
-        SimpleMetaValueSelector.Strategy defaultStrategy = SimpleMetaValueSelector.Strategy.parse(c.getString("meta-value-selection-default", "inheritance"));
-        Map<String, SimpleMetaValueSelector.Strategy> strategies = c.getStringMap("meta-value-selection", ImmutableMap.of()).entrySet().stream()
+        SimpleMetaValueSelector.Strategy defaultStrategy = SimpleMetaValueSelector.Strategy
+                .parse(c.getString("meta-value-selection-default", "inheritance"));
+        Map<String, SimpleMetaValueSelector.Strategy> strategies = c
+                .getStringMap("meta-value-selection", ImmutableMap.of()).entrySet().stream()
                 .map(e -> {
                     SimpleMetaValueSelector.Strategy parse = SimpleMetaValueSelector.Strategy.parse(e.getValue());
                     return parse == null ? null : Maps.immutableEntry(e.getKey(), parse);
@@ -383,8 +395,7 @@ public final class ConfigKeys {
                     } catch (NumberFormatException ex) {
                         return 0;
                     }
-                })
-        );
+                }));
     });
 
     /**
@@ -411,7 +422,8 @@ public final class ConfigKeys {
                 break;
         }
 
-        return new SimpleMetaStackDefinition(StandardStackElements.parseList(c.getPlugin(), format), duplicateRemovalFunction, startSpacer, middleSpacer, endSpacer);
+        return new SimpleMetaStackDefinition(StandardStackElements.parseList(c.getPlugin(), format),
+                duplicateRemovalFunction, startSpacer, middleSpacer, endSpacer);
     });
 
     /**
@@ -438,7 +450,8 @@ public final class ConfigKeys {
                 break;
         }
 
-        return new SimpleMetaStackDefinition(StandardStackElements.parseList(c.getPlugin(), format), duplicateRemovalFunction, startSpacer, middleSpacer, endSpacer);
+        return new SimpleMetaStackDefinition(StandardStackElements.parseList(c.getPlugin(), format),
+                duplicateRemovalFunction, startSpacer, middleSpacer, endSpacer);
     });
 
     /**
@@ -447,7 +460,8 @@ public final class ConfigKeys {
     public static final ConfigKey<Boolean> LOG_NOTIFY = booleanKey("log-notify", true);
 
     /**
-     * Defines a list of log entries which should not be sent as notifications to users.
+     * Defines a list of log entries which should not be sent as notifications to
+     * users.
      */
     public static final ConfigKey<List<Pattern>> LOG_NOTIFY_FILTERED_DESCRIPTIONS = key(c -> {
         return c.getStringList("log-notify-filtered-descriptions", ImmutableList.of()).stream()
@@ -466,12 +480,15 @@ public final class ConfigKeys {
     /**
      * If log should be posted synchronously to storage/messaging in commands
      */
-    public static final ConfigKey<Boolean> LOG_SYNCHRONOUSLY_IN_COMMANDS = booleanKey("log-synchronously-in-commands", false);
+    public static final ConfigKey<Boolean> LOG_SYNCHRONOUSLY_IN_COMMANDS = booleanKey("log-synchronously-in-commands",
+            false);
 
     /**
-     * If LuckPerms should automatically install translation bundles and periodically update them.
+     * If LuckPerms should automatically install translation bundles and
+     * periodically update them.
      */
-    public static final ConfigKey<Boolean> AUTO_INSTALL_TRANSLATIONS = notReloadable(booleanKey("auto-install-translations", true));
+    public static final ConfigKey<Boolean> AUTO_INSTALL_TRANSLATIONS = notReloadable(
+            booleanKey("auto-install-translations", true));
 
     /**
      * If auto op is enabled. Only used by the Bukkit platform.
@@ -481,10 +498,12 @@ public final class ConfigKeys {
     /**
      * If server operators should be enabled. Only used by the Bukkit platform.
      */
-    public static final ConfigKey<Boolean> OPS_ENABLED = notReloadable(key(c -> !AUTO_OP.get(c) && c.getBoolean("enable-ops", true)));
+    public static final ConfigKey<Boolean> OPS_ENABLED = notReloadable(
+            key(c -> !AUTO_OP.get(c) && c.getBoolean("enable-ops", true)));
 
     /**
-     * If server operators should be able to use LuckPerms commands by default. Only used by the Bukkit platform.
+     * If server operators should be able to use LuckPerms commands by default. Only
+     * used by the Bukkit platform.
      */
     public static final ConfigKey<Boolean> COMMANDS_ALLOW_OP = notReloadable(booleanKey("commands-allow-op", true));
 
@@ -494,22 +513,27 @@ public final class ConfigKeys {
     public static final ConfigKey<Boolean> COMMANDS_RATE_LIMIT = booleanKey("commands-rate-limit", true);
 
     /**
-     * If Vault lookups for offline players on the main server thread should be enabled
+     * If Vault lookups for offline players on the main server thread should be
+     * enabled
      */
     public static final ConfigKey<Boolean> VAULT_UNSAFE_LOOKUPS = booleanKey("vault-unsafe-lookups", false);
 
     /**
-     * If LuckPerms should use the 'display name' of a group when returning groups in Vault API calls.
+     * If LuckPerms should use the 'display name' of a group when returning groups
+     * in Vault API calls.
      */
-    public static final ConfigKey<Boolean> VAULT_GROUP_USE_DISPLAYNAMES = booleanKey("vault-group-use-displaynames", true);
+    public static final ConfigKey<Boolean> VAULT_GROUP_USE_DISPLAYNAMES = booleanKey("vault-group-use-displaynames",
+            true);
 
     /**
-     * Controls which group LuckPerms should use for NPC players when handling Vault requests
+     * Controls which group LuckPerms should use for NPC players when handling Vault
+     * requests
      */
     public static final ConfigKey<String> VAULT_NPC_GROUP = stringKey("vault-npc-group", "default");
 
     /**
-     * Controls how LuckPerms should consider the OP status of NPC players when handing Vault requests
+     * Controls how LuckPerms should consider the OP status of NPC players when
+     * handing Vault requests
      */
     public static final ConfigKey<Boolean> VAULT_NPC_OP_STATUS = booleanKey("vault-npc-op-status", false);
 
@@ -534,9 +558,11 @@ public final class ConfigKeys {
     public static final ConfigKey<Boolean> VAULT_IGNORE_WORLD = booleanKey("vault-ignore-world", false);
 
     /**
-     * If the owner of an integrated server should automatically bypass all permission checks. On fabric and forge, this only applies on an Integrated Server.
+     * If the owner of an integrated server should automatically bypass all
+     * permission checks.
      */
-    public static final ConfigKey<Boolean> INTEGRATED_SERVER_OWNER_BYPASSES_CHECKS = booleanKey("integrated-server-owner-bypasses-checks", true);
+    public static final ConfigKey<Boolean> INTEGRATED_SERVER_OWNER_BYPASSES_CHECKS = booleanKey(
+            "integrated-server-owner-bypasses-checks", true);
 
     /**
      * Disabled context calculators
@@ -555,8 +581,7 @@ public final class ConfigKeys {
         return WorldNameRewriter.of(c.getStringMap("world-rewrite", ImmutableMap.of()).entrySet().stream()
                 .collect(ImmutableCollectors.toMap(
                         e -> e.getKey().toLowerCase(Locale.ROOT),
-                        e -> e.getValue().toLowerCase(Locale.ROOT)
-                )));
+                        e -> e.getValue().toLowerCase(Locale.ROOT))));
     });
 
     /**
@@ -573,15 +598,15 @@ public final class ConfigKeys {
         int maxLifetime = c.getInteger("data.pool-settings.maximum-lifetime", 1800000);
         int keepAliveTime = c.getInteger("data.pool-settings.keepalive-time", 0);
         int connectionTimeout = c.getInteger("data.pool-settings.connection-timeout", 5000);
-        Map<String, String> props = ImmutableMap.copyOf(c.getStringMap("data.pool-settings.properties", ImmutableMap.of()));
+        Map<String, String> props = ImmutableMap
+                .copyOf(c.getStringMap("data.pool-settings.properties", ImmutableMap.of()));
 
         return new StorageCredentials(
                 c.getString("data.address", null),
                 c.getString("data.database", null),
                 c.getString("data.username", null),
                 c.getString("data.password", null),
-                maxPoolSize, minIdle, maxLifetime, keepAliveTime, connectionTimeout, props
-        );
+                maxPoolSize, minIdle, maxLifetime, keepAliveTime, connectionTimeout, props);
     }));
 
     /**
@@ -608,7 +633,8 @@ public final class ConfigKeys {
     /**
      * The REST storage URL
      */
-    public static final ConfigKey<String> REST_STORAGE_URL = notReloadable(stringKey("data.rest-url", "http://localhost:8080/"));
+    public static final ConfigKey<String> REST_STORAGE_URL = notReloadable(
+            stringKey("data.rest-url", "http://localhost:8080/"));
 
     /**
      * The REST storage auth key
@@ -637,18 +663,24 @@ public final class ConfigKeys {
      */
     public static final ConfigKey<Map<SplitStorageType, StorageType>> SPLIT_STORAGE_OPTIONS = notReloadable(key(c -> {
         EnumMap<SplitStorageType, StorageType> map = new EnumMap<>(SplitStorageType.class);
-        map.put(SplitStorageType.USER, StorageType.parse(c.getString("split-storage.methods.user", "h2"), StorageType.H2));
-        map.put(SplitStorageType.GROUP, StorageType.parse(c.getString("split-storage.methods.group", "h2"), StorageType.H2));
-        map.put(SplitStorageType.TRACK, StorageType.parse(c.getString("split-storage.methods.track", "h2"), StorageType.H2));
-        map.put(SplitStorageType.UUID, StorageType.parse(c.getString("split-storage.methods.uuid", "h2"), StorageType.H2));
-        map.put(SplitStorageType.LOG, StorageType.parse(c.getString("split-storage.methods.log", "h2"), StorageType.H2));
+        map.put(SplitStorageType.USER,
+                StorageType.parse(c.getString("split-storage.methods.user", "h2"), StorageType.H2));
+        map.put(SplitStorageType.GROUP,
+                StorageType.parse(c.getString("split-storage.methods.group", "h2"), StorageType.H2));
+        map.put(SplitStorageType.TRACK,
+                StorageType.parse(c.getString("split-storage.methods.track", "h2"), StorageType.H2));
+        map.put(SplitStorageType.UUID,
+                StorageType.parse(c.getString("split-storage.methods.uuid", "h2"), StorageType.H2));
+        map.put(SplitStorageType.LOG,
+                StorageType.parse(c.getString("split-storage.methods.log", "h2"), StorageType.H2));
         return ImmutableMap.copyOf(map);
     }));
 
     /**
      * The name of the messaging service in use, or "none" if not enabled
      */
-    public static final ConfigKey<String> MESSAGING_SERVICE = notReloadable(lowercaseStringKey("messaging-service", "auto"));
+    public static final ConfigKey<String> MESSAGING_SERVICE = notReloadable(
+            lowercaseStringKey("messaging-service", "auto"));
 
     /**
      * If updates should be automatically pushed by the messaging service
@@ -656,14 +688,17 @@ public final class ConfigKeys {
     public static final ConfigKey<Boolean> AUTO_PUSH_UPDATES = notReloadable(booleanKey("auto-push-updates", true));
 
     /**
-     * If LuckPerms should push logging entries to connected servers via the messaging service
+     * If LuckPerms should push logging entries to connected servers via the
+     * messaging service
      */
     public static final ConfigKey<Boolean> PUSH_LOG_ENTRIES = notReloadable(booleanKey("push-log-entries", true));
 
     /**
-     * If LuckPerms should broadcast received logging entries to players on this platform
+     * If LuckPerms should broadcast received logging entries to players on this
+     * platform
      */
-    public static final ConfigKey<Boolean> BROADCAST_RECEIVED_LOG_ENTRIES = notReloadable(booleanKey("broadcast-received-log-entries", false));
+    public static final ConfigKey<Boolean> BROADCAST_RECEIVED_LOG_ENTRIES = notReloadable(
+            booleanKey("broadcast-received-log-entries", false));
 
     /**
      * If redis messaging is enabled
@@ -678,7 +713,8 @@ public final class ConfigKeys {
     /**
      * The addresses of the redis servers (only for redis clusters)
      */
-    public static final ConfigKey<List<String>> REDIS_ADDRESSES = notReloadable(stringListKey("redis.addresses", ImmutableList.of()));
+    public static final ConfigKey<List<String>> REDIS_ADDRESSES = notReloadable(
+            stringListKey("redis.addresses", ImmutableList.of()));
 
     /**
      * The username to connect with, or an empty string if it should use default
@@ -686,7 +722,8 @@ public final class ConfigKeys {
     public static final ConfigKey<String> REDIS_USERNAME = notReloadable(stringKey("redis.username", ""));
 
     /**
-     * The password in use by the redis server, or an empty string if there is no password
+     * The password in use by the redis server, or an empty string if there is no
+     * password
      */
     public static final ConfigKey<String> REDIS_PASSWORD = notReloadable(stringKey("redis.password", ""));
 
@@ -711,7 +748,8 @@ public final class ConfigKeys {
     public static final ConfigKey<String> NATS_USERNAME = notReloadable(stringKey("nats.username", ""));
 
     /**
-     * The password in use by the nats server, or an empty string if there is no password
+     * The password in use by the nats server, or an empty string if there is no
+     * password
      */
     public static final ConfigKey<String> NATS_PASSWORD = notReloadable(stringKey("nats.password", ""));
 
@@ -741,7 +779,8 @@ public final class ConfigKeys {
     public static final ConfigKey<String> RABBITMQ_USERNAME = notReloadable(stringKey("rabbitmq.username", "guest"));
 
     /**
-     * The password in use by the rabbitmq server, or an empty string if there is no password
+     * The password in use by the rabbitmq server, or an empty string if there is no
+     * password
      */
     public static final ConfigKey<String> RABBITMQ_PASSWORD = notReloadable(stringKey("rabbitmq.password", "guest"));
 
@@ -768,18 +807,20 @@ public final class ConfigKeys {
     /**
      * The URL of the web editor
      */
-    public static final ConfigKey<String> WEB_EDITOR_URL_PATTERN = stringKey("web-editor-url", "https://luckperms.net/editor/");
+    public static final ConfigKey<String> WEB_EDITOR_URL_PATTERN = stringKey("web-editor-url",
+            "https://luckperms.net/editor/");
 
     /**
      * The URL of the verbose viewer
      */
-    public static final ConfigKey<String> VERBOSE_VIEWER_URL_PATTERN = stringKey("verbose-viewer-url", "https://luckperms.net/verbose/");
+    public static final ConfigKey<String> VERBOSE_VIEWER_URL_PATTERN = stringKey("verbose-viewer-url",
+            "https://luckperms.net/verbose/");
 
     /**
      * The URL of the tree viewer
      */
-    public static final ConfigKey<String> TREE_VIEWER_URL_PATTERN = stringKey("tree-viewer-url", "https://luckperms.net/treeview/");
-
+    public static final ConfigKey<String> TREE_VIEWER_URL_PATTERN = stringKey("tree-viewer-url",
+            "https://luckperms.net/treeview/");
 
     /**
      * A list of the keys defined in this class.

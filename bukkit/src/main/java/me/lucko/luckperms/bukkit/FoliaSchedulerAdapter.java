@@ -23,36 +23,23 @@
  *  SOFTWARE.
  */
 
-package me.lucko.luckperms.common.calculator.processor;
+package me.lucko.luckperms.bukkit;
 
-import me.lucko.luckperms.common.cacheddata.result.TristateResult;
-import net.luckperms.api.util.Tristate;
+import me.lucko.luckperms.common.plugin.scheduler.AbstractJavaScheduler;
+import me.lucko.luckperms.common.plugin.scheduler.SchedulerAdapter;
 
-public abstract class AbstractOverrideWildcardProcessor extends AbstractPermissionProcessor
-        implements PermissionProcessor {
-    private final boolean overrideWildcards;
+import java.util.concurrent.Executor;
 
-    public AbstractOverrideWildcardProcessor(boolean overrideWildcards) {
-        this.overrideWildcards = overrideWildcards;
-    }
+public class FoliaSchedulerAdapter extends AbstractJavaScheduler implements SchedulerAdapter {
+    private final Executor sync;
 
-    private boolean canOverrideWildcard(TristateResult prev) {
-        return this.overrideWildcards &&
-                prev.processorClass() == WildcardProcessor.class &&
-                prev.result() == Tristate.TRUE;
+    public FoliaSchedulerAdapter(LPBukkitBootstrap bootstrap) {
+        super(bootstrap);
+        this.sync = r -> bootstrap.getServer().getGlobalRegionScheduler().execute(bootstrap.getLoader(), r);
     }
 
     @Override
-    protected TristateResult hasPermissionOverride(TristateResult prev, String permission) {
-        if (canOverrideWildcard(prev)) {
-            TristateResult override = hasPermission(permission);
-            if (override.result() == Tristate.FALSE) {
-                override.setOverriddenResult(prev);
-                return override;
-            }
-        }
-
-        return prev;
+    public Executor sync() {
+        return this.sync;
     }
-
 }

@@ -38,21 +38,27 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.util.UUID;
 
 /**
- * A utility class for adapting platform Player instances to LuckPerms {@link User}s.
+ * A utility class for adapting platform Player instances to LuckPerms
+ * {@link User}s.
  *
- * <p>Note: this class will only work for online players.</p>
+ * <p>
+ * Note: this class will only work for online players.
+ * </p>
  *
- * <p>The "player type" parameter must be equal to the class or interface used by the
- * server platform to represent players.</p>
+ * <p>
+ * The "player type" parameter must be equal to the class or interface used by
+ * the
+ * server platform to represent players.
+ * </p>
  *
- * <p>Specifically:</p>
+ * <p>
+ * Specifically:
+ * </p>
  *
- * <p></p>
+ * <p>
+ * </p>
  * <ul>
  * <li>{@code org.bukkit.entity.Player}</li>
- * <li>{@code net.md_5.bungee.api.connection.ProxiedPlayer}</li>
- * <li>{@code org.spongepowered.api/entity.living.player.Player}</li>
- * <li>{@code cn.nukkit.Player}</li>
  * <li>{@code com.velocitypowered.api.proxy.Player}</li>
  * </ul>
  *
@@ -68,25 +74,30 @@ public interface PlayerAdapter<T> {
      * @return the user
      * @see UserManager#getUser(UUID)
      */
-    @NonNull User getUser(@NonNull T player);
+    @NonNull
+    User getUser(@NonNull T player);
 
     /**
-     * Gets current {@link ImmutableContextSet active context} for the {@code player}.
+     * Gets current {@link ImmutableContextSet active context} for the
+     * {@code player}.
      *
      * @param player the player
      * @return the active context for the player
      * @see ContextManager#getContext(Object)
      */
-    @NonNull ImmutableContextSet getContext(@NonNull T player);
+    @NonNull
+    ImmutableContextSet getContext(@NonNull T player);
 
     /**
-     * Gets current {@link QueryOptions active query options} for the {@code player}.
+     * Gets current {@link QueryOptions active query options} for the
+     * {@code player}.
      *
      * @param player the player
      * @return the active query options for the player
      * @see ContextManager#getQueryOptions(Object)
      */
-    @NonNull QueryOptions getQueryOptions(@NonNull T player);
+    @NonNull
+    QueryOptions getQueryOptions(@NonNull T player);
 
     /**
      * Gets the current {@link CachedPermissionData} for the {@code player},

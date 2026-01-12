@@ -60,11 +60,13 @@ import java.util.regex.Pattern;
 
 public class PermissionCheck extends GenericChildCommand {
     public PermissionCheck() {
-        super(CommandSpec.PERMISSION_CHECK, "check", CommandPermission.USER_PERM_CHECK, CommandPermission.GROUP_PERM_CHECK, Predicates.is(0));
+        super(CommandSpec.PERMISSION_CHECK, "check", CommandPermission.USER_PERM_CHECK,
+                CommandPermission.GROUP_PERM_CHECK, Predicates.is(0));
     }
 
     @Override
-    public void execute(LuckPermsPlugin plugin, Sender sender, PermissionHolder target, ArgumentList args, String label, CommandPermission permission) throws CommandException {
+    public void execute(LuckPermsPlugin plugin, Sender sender, PermissionHolder target, ArgumentList args, String label,
+            CommandPermission permission) throws CommandException {
         if (ArgumentPermissions.checkViewPerms(plugin, sender, permission, target)) {
             Message.COMMAND_NO_PERMISSION.send(sender);
             return;
@@ -101,7 +103,8 @@ public class PermissionCheck extends GenericChildCommand {
             Message.PERMISSION_CHECK_INFO_NOT_DIRECTLY.send(sender, target, node);
         } else {
             for (Node n : own) {
-                Message.PERMISSION_CHECK_INFO_DIRECTLY.send(sender, target, n.getKey(), Tristate.of(n.getValue()), n.getContexts());
+                Message.PERMISSION_CHECK_INFO_DIRECTLY.send(sender, target, n.getKey(), Tristate.of(n.getValue()),
+                        n.getContexts());
             }
         }
         if (inherited.isEmpty()) {
@@ -109,15 +112,18 @@ public class PermissionCheck extends GenericChildCommand {
         } else {
             for (Node n : inherited) {
                 String origin = n.metadata(InheritanceOriginMetadata.KEY).getOrigin().getName();
-                Message.PERMISSION_CHECK_INFO_INHERITED.send(sender, target, n.getKey(), Tristate.of(n.getValue()), n.getContexts(), origin);
+                Message.PERMISSION_CHECK_INFO_INHERITED.send(sender, target, n.getKey(), Tristate.of(n.getValue()),
+                        n.getContexts(), origin);
             }
         }
         for (Node n : wildcards) {
             if (isInherited(n, target)) {
                 String origin = n.metadata(InheritanceOriginMetadata.KEY).getOrigin().getName();
-                Message.PERMISSION_CHECK_INFO_INHERITED.send(sender, target, n.getKey(), Tristate.of(n.getValue()), n.getContexts(), origin);
+                Message.PERMISSION_CHECK_INFO_INHERITED.send(sender, target, n.getKey(), Tristate.of(n.getValue()),
+                        n.getContexts(), origin);
             } else {
-                Message.PERMISSION_CHECK_INFO_DIRECTLY.send(sender, target, n.getKey(), Tristate.of(n.getValue()), n.getContexts());
+                Message.PERMISSION_CHECK_INFO_DIRECTLY.send(sender, target, n.getKey(), Tristate.of(n.getValue()),
+                        n.getContexts());
             }
         }
 
@@ -126,7 +132,8 @@ public class PermissionCheck extends GenericChildCommand {
 
         // perform a "real" check
         QueryOptions queryOptions = target.getQueryOptions();
-        TristateResult checkResult = target.getCachedData().getPermissionData(queryOptions).checkPermission(node, CheckOrigin.INTERNAL);
+        TristateResult checkResult = target.getCachedData().getPermissionData(queryOptions).checkPermission(node,
+                CheckOrigin.INTERNAL);
 
         Tristate result = checkResult.result();
         String processor = checkResult.processorClassFriendly();
@@ -164,18 +171,6 @@ public class PermissionCheck extends GenericChildCommand {
                     if (permission.startsWith(wildcardBody)) {
                         return true;
                     }
-                }
-            }
-        }
-
-        if (plugin.getConfiguration().get(ConfigKeys.APPLYING_WILDCARDS_SPONGE)) {
-            String key = node.getKey();
-
-            int endIndex = key.lastIndexOf(AbstractNode.NODE_SEPARATOR);
-            if (endIndex > 0) {
-                String wildcardBody = key.substring(0, endIndex);
-                if (permission.startsWith(wildcardBody)) {
-                    return true;
                 }
             }
         }

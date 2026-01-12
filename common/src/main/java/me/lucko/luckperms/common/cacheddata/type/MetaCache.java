@@ -52,11 +52,19 @@ import net.luckperms.api.query.meta.MetaValueSelector;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+import me.lucko.luckperms.common.locale.Message;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.luckperms.api.node.types.ChatMetaNode;
 
 /**
  * Holds cached meta for a given context
@@ -84,7 +92,8 @@ public class MetaCache extends UsageTracked implements CachedMetaData {
         this.plugin = plugin;
         this.queryOptions = queryOptions;
 
-        Map<String, List<StringResult<MetaNode>>> meta = Multimaps.asMap(ImmutableListMultimap.copyOf(sourceMeta.getMeta()));
+        Map<String, List<StringResult<MetaNode>>> meta = Multimaps
+                .asMap(ImmutableListMultimap.copyOf(sourceMeta.getMeta()));
 
         MetaValueSelector metaValueSelector = this.queryOptions.option(MetaValueSelector.KEY)
                 .orElseGet(() -> this.plugin.getConfiguration().get(ConfigKeys.META_VALUE_SELECTOR));
@@ -105,14 +114,50 @@ public class MetaCache extends UsageTracked implements CachedMetaData {
         this.flattenedMeta = builder.build();
         this.meta = new LowerCaseMetaMap(meta);
 
-        this.prefixes = ImmutableSortedMap.copyOfSorted(sourceMeta.getPrefixes());
-        this.suffixes = ImmutableSortedMap.copyOfSorted(sourceMeta.getSuffixes());
         this.weight = sourceMeta.getWeight();
         this.primaryGroup = sourceMeta.getPrimaryGroup();
         this.prefixDefinition = sourceMeta.getPrefixDefinition();
         this.suffixDefinition = sourceMeta.getSuffixDefinition();
-        this.prefix = sourceMeta.getPrefix();
-        this.suffix = sourceMeta.getSuffix();
+
+        if (plugin.getConfiguration().get(ConfigKeys.USE_MINIMESSAGE_FOR_METADATA)) {
+            this.prefixes = convertMiniMessageMap(sourceMeta.getPrefixes());
+            this.suffixes = convertMiniMessageMap(sourceMeta.getSuffixes());
+            this.prefix = convertMiniMessage(sourceMeta.getPrefix());
+            this.suffix = convertMiniMessage(sourceMeta.getSuffix());
+        } else {
+            this.prefixes = ImmutableSortedMap.copyOfSorted(sourceMeta.getPrefixes());
+            this.suffixes = ImmutableSortedMap.copyOfSorted(sourceMeta.getSuffixes());
+            this.prefix = sourceMeta.getPrefix();
+            this.suffix = sourceMeta.getSuffix();
+        }
+    }
+
+    private <N extends ChatMetaNode<N, ?>> StringResult<N> convertMiniMessage(StringResult<N> result) {
+        if (result.isNull()) {
+            return result;
+        }
+
+        String val = result.result();
+        if (val == null) {
+            return result;
+        }
+
+        Component component = Message.MINI_MESSAGE.deserialize(val);
+        String legacy = LegacyComponentSerializer.legacySection().serialize(component);
+        return StringResult.of(legacy, result.node());
+    }
+
+    private <N extends ChatMetaNode<N, ?>> SortedMap<Integer, StringResult<N>> convertMiniMessageMap(
+            SortedMap<Integer, StringResult<N>> map) {
+        if (map.isEmpty()) {
+            return ImmutableSortedMap.of();
+        }
+
+        TreeMap<Integer, StringResult<N>> sorted = new TreeMap<>(map.comparator());
+        for (Map.Entry<Integer, StringResult<N>> entry : map.entrySet()) {
+            sorted.put(entry.getKey(), convertMiniMessage(entry.getValue()));
+        }
+        return Collections.unmodifiableSortedMap(sorted);
     }
 
     public @NonNull StringResult<MetaNode> getMetaValue(String key, CheckOrigin origin) {

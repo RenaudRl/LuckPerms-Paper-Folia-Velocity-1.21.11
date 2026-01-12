@@ -75,27 +75,35 @@ public abstract class AbstractConnectionListener {
 
         // most likely because ip forwarding is not setup correctly
         // print a warning to the console
-        if (saveResult.includes(PlayerSaveResult.Outcome.OTHER_UNIQUE_IDS_PRESENT_FOR_USERNAME) && !Boolean.getBoolean("luckperms.suppress-uuid-mismatch-warning")) {
+        if (saveResult.includes(PlayerSaveResult.Outcome.OTHER_UNIQUE_IDS_PRESENT_FOR_USERNAME)
+                && !Boolean.getBoolean("luckperms.suppress-uuid-mismatch-warning")) {
             Set<UUID> otherUuids = saveResult.getOtherUniqueIds();
 
-            this.plugin.getLogger().warn("LuckPerms already has data for player '" + username + "' - but this data is stored under a different UUID.");
-            this.plugin.getLogger().warn("'" + username + "' has previously used the unique ids " + otherUuids + " but is now connecting with '" + uniqueId + "'");
+            this.plugin.getLogger().warn("LuckPerms already has data for player '" + username
+                    + "' - but this data is stored under a different UUID.");
+            this.plugin.getLogger().warn("'" + username + "' has previously used the unique ids " + otherUuids
+                    + " but is now connecting with '" + uniqueId + "'");
 
             if (uniqueId.version() == 4) {
-                if (this.plugin.getBootstrap().getType() == Platform.Type.BUNGEECORD) {
-                    this.plugin.getLogger().warn("The UUID the player is connecting with now is Mojang-assigned (type 4). This implies that BungeeCord's IP-Forwarding has not been setup correctly on one (or more) of the backend servers.");
-                } if (this.plugin.getBootstrap().getType() == Platform.Type.VELOCITY) {
-                    this.plugin.getLogger().warn("The UUID the player is connecting with now is Mojang-assigned (type 4). This implies that Velocity's IP-Forwarding has not been setup correctly on one (or more) of the backend servers.");
+                if (this.plugin.getBootstrap().getType() == Platform.Type.VELOCITY) {
+                    this.plugin.getLogger().warn(
+                            "The UUID the player is connecting with now is Mojang-assigned (type 4). This implies that Velocity's IP-Forwarding has not been setup correctly on one (or more) of the backend servers.");
                 } else {
-                    this.plugin.getLogger().warn("The UUID the player is connecting with now is Mojang-assigned (type 4). This implies that one of the other servers in your network is not authenticating correctly.");
-                    this.plugin.getLogger().warn("If you're using BungeeCord/Velocity, please ensure that IP-Forwarding is setup correctly on all of your backend servers!");
+                    this.plugin.getLogger().warn(
+                            "The UUID the player is connecting with now is Mojang-assigned (type 4). This implies that one of the other servers in your network is not authenticating correctly.");
+                    this.plugin.getLogger().warn(
+                            "If you're using Velocity, please ensure that IP-Forwarding is setup correctly on all of your backend servers!");
                 }
             } else {
-                this.plugin.getLogger().warn("The UUID the player is connecting with now is NOT Mojang-assigned (type " + uniqueId.version() + "). This implies that THIS server is not authenticating correctly, but one (or more) of the other servers/proxies in the network are.");
-                this.plugin.getLogger().warn("If you're using BungeeCord/Velocity, please ensure that IP-Forwarding is setup correctly on all of your backend servers!");
+                this.plugin.getLogger().warn("The UUID the player is connecting with now is NOT Mojang-assigned (type "
+                        + uniqueId.version()
+                        + "). This implies that THIS server is not authenticating correctly, but one (or more) of the other servers/proxies in the network are.");
+                this.plugin.getLogger().warn(
+                        "If you're using BungeeCord/Velocity, please ensure that IP-Forwarding is setup correctly on all of your backend servers!");
             }
 
-            this.plugin.getLogger().warn("See here for more info: https://luckperms.net/wiki/Network-Installation#pre-setup");
+            this.plugin.getLogger()
+                    .warn("See here for more info: https://luckperms.net/wiki/Network-Installation#pre-setup");
         }
 
         User user = this.plugin.getStorage().loadUser(uniqueId, username).join();

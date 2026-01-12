@@ -4,23 +4,34 @@ plugins {
 
 repositories {
     maven { url 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url 'https://ci.lilypadmc.org/plugin/repository/everything/' }
 }
 
 dependencies {
     implementation project(':common')
     compileOnly project(':common:loader-utils')
 
-    compileOnly 'com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT'
+    compileOnly 'dev.folia:folia-api:1.21.11-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT'
+
     compileOnly('net.kyori:adventure-platform-bukkit:4.4.0') {
         exclude(module: 'adventure-bom')
         exclude(module: 'adventure-api')
         exclude(module: 'adventure-nbt')
+        exclude(group: 'org.bukkit')
+        exclude(group: 'io.papermc.paper')
     }
     compileOnly 'me.lucko:commodore:2.0'
     compileOnly('net.milkbowl.vault:VaultAPI:1.7') {
-        exclude(module: 'bukkit')
+        exclude(group: 'org.bukkit')
     }
     compileOnly 'lilypad.client.connect:api:0.0.1-SNAPSHOT'
+}
+
+configurations.all {
+    resolutionStrategy.capabilitiesResolution.withCapability("org.bukkit:bukkit") {
+        select("dev.folia:folia-api:0")
+    }
 }
 
 shadowJar {

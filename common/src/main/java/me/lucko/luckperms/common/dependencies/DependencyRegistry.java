@@ -43,26 +43,34 @@ import java.util.Set;
  */
 public class DependencyRegistry {
 
-    private static final SetMultimap<StorageType, Dependency> STORAGE_DEPENDENCIES = ImmutableSetMultimap.<StorageType, Dependency>builder()
-            .putAll(StorageType.YAML,           Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_YAML, Dependency.SNAKEYAML)
-            .putAll(StorageType.YAML_COMBINED,  Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_YAML, Dependency.SNAKEYAML)
-            .putAll(StorageType.JSON,           Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_GSON)
-            .putAll(StorageType.JSON_COMBINED,  Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_GSON)
-            .putAll(StorageType.HOCON,          Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_HOCON, Dependency.HOCON_CONFIG)
-            .putAll(StorageType.HOCON_COMBINED, Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_HOCON, Dependency.HOCON_CONFIG)
-            .putAll(StorageType.TOML,           Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_TOML, Dependency.TOML4J)
-            .putAll(StorageType.TOML_COMBINED,  Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_TOML, Dependency.TOML4J)
-            .putAll(StorageType.MONGODB,        Dependency.MONGODB_DRIVER_CORE, Dependency.MONGODB_DRIVER_LEGACY, Dependency.MONGODB_DRIVER_SYNC, Dependency.MONGODB_DRIVER_BSON)
-            .putAll(StorageType.MARIADB,        Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.MARIADB_DRIVER)
-            .putAll(StorageType.MYSQL,          Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.MYSQL_DRIVER)
-            .putAll(StorageType.POSTGRESQL,     Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.POSTGRESQL_DRIVER)
-            .putAll(StorageType.SQLITE,         Dependency.SQLITE_DRIVER)
-            .putAll(StorageType.H2,             Dependency.H2_DRIVER)
+    private static final SetMultimap<StorageType, Dependency> STORAGE_DEPENDENCIES = ImmutableSetMultimap
+            .<StorageType, Dependency>builder()
+            .putAll(StorageType.YAML, Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_YAML, Dependency.SNAKEYAML)
+            .putAll(StorageType.YAML_COMBINED, Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_YAML,
+                    Dependency.SNAKEYAML)
+            .putAll(StorageType.JSON, Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_GSON)
+            .putAll(StorageType.JSON_COMBINED, Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_GSON)
+            .putAll(StorageType.HOCON, Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_HOCON,
+                    Dependency.HOCON_CONFIG)
+            .putAll(StorageType.HOCON_COMBINED, Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_HOCON,
+                    Dependency.HOCON_CONFIG)
+            .putAll(StorageType.TOML, Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_TOML, Dependency.TOML4J)
+            .putAll(StorageType.TOML_COMBINED, Dependency.CONFIGURATE_CORE, Dependency.CONFIGURATE_TOML,
+                    Dependency.TOML4J)
+            .putAll(StorageType.MONGODB, Dependency.MONGODB_DRIVER_CORE, Dependency.MONGODB_DRIVER_LEGACY,
+                    Dependency.MONGODB_DRIVER_SYNC, Dependency.MONGODB_DRIVER_BSON)
+            .putAll(StorageType.MARIADB, Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI,
+                    Dependency.MARIADB_DRIVER)
+            .putAll(StorageType.MYSQL, Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI,
+                    Dependency.MYSQL_DRIVER)
+            .putAll(StorageType.POSTGRESQL, Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI,
+                    Dependency.POSTGRESQL_DRIVER)
+            .putAll(StorageType.SQLITE, Dependency.SQLITE_DRIVER)
+            .putAll(StorageType.H2, Dependency.H2_DRIVER)
             .build();
 
     private static final Set<Platform.Type> SNAKEYAML_PROVIDED_BY_PLATFORM = ImmutableSet.of(
-            Platform.Type.BUKKIT, Platform.Type.BUNGEECORD, Platform.Type.SPONGE, Platform.Type.NUKKIT
-    );
+            Platform.Type.BUKKIT);
 
     private final Platform.Type platformType;
 
@@ -70,7 +78,8 @@ public class DependencyRegistry {
         this.platformType = platformType;
     }
 
-    public Set<Dependency> resolveStorageDependencies(Set<StorageType> storageTypes, boolean redis, boolean rabbitmq, boolean nats) {
+    public Set<Dependency> resolveStorageDependencies(Set<StorageType> storageTypes, boolean redis, boolean rabbitmq,
+            boolean nats) {
         Set<Dependency> dependencies = new LinkedHashSet<>();
         for (StorageType storageType : storageTypes) {
             dependencies.addAll(STORAGE_DEPENDENCIES.get(storageType));
@@ -92,7 +101,8 @@ public class DependencyRegistry {
         }
 
         // don't load slf4j if it's already present
-        if ((dependencies.contains(Dependency.SLF4J_API) || dependencies.contains(Dependency.SLF4J_SIMPLE)) && slf4jPresent()) {
+        if ((dependencies.contains(Dependency.SLF4J_API) || dependencies.contains(Dependency.SLF4J_SIMPLE))
+                && slf4jPresent()) {
             dependencies.remove(Dependency.SLF4J_API);
             dependencies.remove(Dependency.SLF4J_SIMPLE);
         }

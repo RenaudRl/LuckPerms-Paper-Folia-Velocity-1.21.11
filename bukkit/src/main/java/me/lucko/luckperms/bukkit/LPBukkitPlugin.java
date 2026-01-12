@@ -29,6 +29,8 @@ import me.lucko.luckperms.bukkit.brigadier.LuckPermsBrigadier;
 import me.lucko.luckperms.bukkit.calculator.BukkitCalculatorFactory;
 import me.lucko.luckperms.bukkit.context.BukkitContextManager;
 import me.lucko.luckperms.bukkit.context.BukkitPlayerCalculator;
+import me.lucko.luckperms.bukkit.context.FoliaPlayerCalculator;
+import me.lucko.luckperms.bukkit.context.FoliaTpsCalculator;
 import me.lucko.luckperms.bukkit.inject.permissible.LuckPermsPermissible;
 import me.lucko.luckperms.bukkit.inject.permissible.PermissibleInjector;
 import me.lucko.luckperms.bukkit.inject.permissible.PermissibleMonitoringInjector;
@@ -94,7 +96,7 @@ public class LPBukkitPlugin extends AbstractLuckPermsPlugin {
     private LuckPermsPermissionMap permissionMap;
     private LuckPermsDefaultsMap defaultPermissionMap;
     private VaultHookManager vaultHookManager = null;
-    
+
     public LPBukkitPlugin(LPBukkitBootstrap bootstrap) {
         this.bootstrap = bootstrap;
     }
@@ -133,8 +135,10 @@ public class LPBukkitPlugin extends AbstractLuckPermsPlugin {
     @Override
     protected void registerPlatformListeners() {
         this.connectionListener = new BukkitConnectionListener(this);
-        this.bootstrap.getServer().getPluginManager().registerEvents(this.connectionListener, this.bootstrap.getLoader());
-        this.bootstrap.getServer().getPluginManager().registerEvents(new BukkitPlatformListener(this), this.bootstrap.getLoader());
+        this.bootstrap.getServer().getPluginManager().registerEvents(this.connectionListener,
+                this.bootstrap.getLoader());
+        this.bootstrap.getServer().getPluginManager().registerEvents(new BukkitPlatformListener(this),
+                this.bootstrap.getLoader());
     }
 
     @Override
@@ -186,15 +190,23 @@ public class LPBukkitPlugin extends AbstractLuckPermsPlugin {
     protected void setupContextManager() {
         this.contextManager = new BukkitContextManager(this);
 
-        BukkitPlayerCalculator playerCalculator = new BukkitPlayerCalculator(this, getConfiguration().get(ConfigKeys.DISABLED_CONTEXTS));
+        BukkitPlayerCalculator playerCalculator = new BukkitPlayerCalculator(this,
+                getConfiguration().get(ConfigKeys.DISABLED_CONTEXTS));
         this.bootstrap.getServer().getPluginManager().registerEvents(playerCalculator, this.bootstrap.getLoader());
         this.contextManager.registerCalculator(playerCalculator);
+
+        if (this.bootstrap.isFolia()) {
+            FoliaPlayerCalculator foliaCalculator = new FoliaPlayerCalculator(this);
+            this.contextManager.registerCalculator(foliaCalculator);
+            FoliaTpsCalculator foliaTpsCalculator = new FoliaTpsCalculator(this);
+            this.contextManager.registerCalculator(foliaTpsCalculator);
+        }
     }
 
     @Override
     protected void setupPlatformHooks() {
         // inject our own custom permission maps
-        Runnable[] injectors = new Runnable[]{
+        Runnable[] injectors = new Runnable[] {
                 new InjectorSubscriptionMap(this)::inject,
                 new InjectorPermissionMap(this)::inject,
                 new InjectorDefaultsMap(this)::inject,
@@ -206,14 +218,19 @@ public class LPBukkitPlugin extends AbstractLuckPermsPlugin {
 
             // schedule another injection after all plugins have loaded
             // the entire pluginmanager instance is replaced by some plugins :(
-            this.bootstrap.getServer().getScheduler().runTaskLaterAsynchronously(this.bootstrap.getLoader(), injector, 1);
+            this.bootstrap.getServer().getScheduler().runTaskLaterAsynchronously(this.bootstrap.getLoader(), injector,
+                    1);
         }
 
         /*
-         * This is an unfortunate solution to a problem which shouldn't even exist. As of Spigot 1.15,
-         * the way LP establishes it's load order relative to Vault triggers a dependency warning.
-         * This is a workaround to prevent that from showing, since at the moment, there is nothing I
-         * can reasonably do to improve this handling in LP without breaking plugins which use/obtain
+         * This is an unfortunate solution to a problem which shouldn't even exist. As
+         * of Spigot 1.15,
+         * the way LP establishes it's load order relative to Vault triggers a
+         * dependency warning.
+         * This is a workaround to prevent that from showing, since at the moment, there
+         * is nothing I
+         * can reasonably do to improve this handling in LP without breaking plugins
+         * which use/obtain
          * Vault in their onEnable without depending on us.
          *
          * Noteworthy discussion here:
@@ -221,7 +238,8 @@ public class LPBukkitPlugin extends AbstractLuckPermsPlugin {
          * - https://hub.spigotmc.org/jira/browse/SPIGOT-5546
          * - https://github.com/PaperMC/Paper/pull/3509
          */
-        PluginManagerUtil.injectDependency(this.bootstrap.getServer().getPluginManager(), this.bootstrap.getLoader().getName(), "Vault");
+        PluginManagerUtil.injectDependency(this.bootstrap.getServer().getPluginManager(),
+                this.bootstrap.getLoader().getName(), "Vault");
 
         // Provide vault support
         tryVaultHook(false);
@@ -251,14 +269,16 @@ public class LPBukkitPlugin extends AbstractLuckPermsPlugin {
 
     @Override
     protected void registerApiOnPlatform(LuckPerms api) {
-        this.bootstrap.getServer().getServicesManager().register(LuckPerms.class, api, this.bootstrap.getLoader(), ServicePriority.Normal);
+        this.bootstrap.getServer().getServicesManager().register(LuckPerms.class, api, this.bootstrap.getLoader(),
+                ServicePriority.Normal);
     }
 
     @Override
     protected void performFinalSetup() {
         // register permissions
         PluginManager pluginManager = this.bootstrap.getServer().getPluginManager();
-        PermissionDefault permDefault = getConfiguration().get(ConfigKeys.COMMANDS_ALLOW_OP) ? PermissionDefault.OP : PermissionDefault.FALSE;
+        PermissionDefault permDefault = getConfiguration().get(ConfigKeys.COMMANDS_ALLOW_OP) ? PermissionDefault.OP
+                : PermissionDefault.FALSE;
 
         for (CommandPermission permission : CommandPermission.values()) {
             Permission bukkitPermission = new Permission(permission.getPermission(), permDefault);
@@ -281,7 +301,7 @@ public class LPBukkitPlugin extends AbstractLuckPermsPlugin {
         }
 
         // register bukkit command list updater
-        if (getConfiguration().get(ConfigKeys.UPDATE_CLIENT_COMMAND_LIST) && BukkitCommandListUpdater.isSupported()) {
+        if (getConfiguration().get(ConfigKeys.UPDATE_CLIENT_COMMAND_LIST) && this.bootstrap.isPaper()) {
             getApiProvider().getEventBus().subscribe(new BukkitCommandListUpdater(this));
         }
 
@@ -370,8 +390,7 @@ public class LPBukkitPlugin extends AbstractLuckPermsPlugin {
         List<Player> players = new ArrayList<>(this.bootstrap.getServer().getOnlinePlayers());
         return Stream.concat(
                 Stream.of(getConsoleSender()),
-                players.stream().map(p -> getSenderFactory().wrap(p))
-        );
+                players.stream().map(p -> getSenderFactory().wrap(p)));
     }
 
     @Override

@@ -38,7 +38,7 @@ import java.util.List;
 public class VelocityCommandExecutor extends CommandManager implements RawCommand {
     /* The command aliases */
     private static final String PRIMARY_ALIAS = "luckpermsvelocity";
-    private static final String[] ALIASES = {"lpv"};
+    private static final String[] ALIASES = { "lpv" };
 
     /* The command aliases, prefixed with '/' */
     private static final String SLASH_PRIMARY_ALIAS = "/luckpermsvelocity";
@@ -55,7 +55,8 @@ public class VelocityCommandExecutor extends CommandManager implements RawComman
         ProxyServer proxy = this.plugin.getBootstrap().getProxy();
         proxy.getCommandManager().register(PRIMARY_ALIAS, this, ALIASES);
 
-        // register slash aliases so the console can run '/lpv' in the same way as 'lpv'.
+        // register slash aliases so the console can run '/lpv' in the same way as
+        // 'lpv'.
         proxy.getCommandManager().register(SLASH_PRIMARY_ALIAS, new ForwardingCommand(this) {
             @Override
             public boolean hasPermission(Invocation invocation) {

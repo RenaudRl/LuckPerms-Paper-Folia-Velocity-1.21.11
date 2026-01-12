@@ -23,36 +23,37 @@
  *  SOFTWARE.
  */
 
-package me.lucko.luckperms.common.calculator.processor;
+package me.lucko.luckperms.bukkit.context;
 
-import me.lucko.luckperms.common.cacheddata.result.TristateResult;
-import net.luckperms.api.util.Tristate;
+import me.lucko.luckperms.bukkit.LPBukkitPlugin;
+import net.luckperms.api.context.ContextCalculator;
+import net.luckperms.api.context.ContextConsumer;
+import net.luckperms.api.context.ContextSet;
+import net.luckperms.api.context.ImmutableContextSet;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-public abstract class AbstractOverrideWildcardProcessor extends AbstractPermissionProcessor
-        implements PermissionProcessor {
-    private final boolean overrideWildcards;
+public class FoliaPlayerCalculator implements ContextCalculator<Player> {
+    private final LPBukkitPlugin plugin;
 
-    public AbstractOverrideWildcardProcessor(boolean overrideWildcards) {
-        this.overrideWildcards = overrideWildcards;
-    }
-
-    private boolean canOverrideWildcard(TristateResult prev) {
-        return this.overrideWildcards &&
-                prev.processorClass() == WildcardProcessor.class &&
-                prev.result() == Tristate.TRUE;
+    public FoliaPlayerCalculator(LPBukkitPlugin plugin) {
+        this.plugin = plugin;
     }
 
     @Override
-    protected TristateResult hasPermissionOverride(TristateResult prev, String permission) {
-        if (canOverrideWildcard(prev)) {
-            TristateResult override = hasPermission(permission);
-            if (override.result() == Tristate.FALSE) {
-                override.setOverriddenResult(prev);
-                return override;
-            }
-        }
+    public void calculate(@NonNull Player subject, @NonNull ContextConsumer consumer) {
+        Location loc = subject.getLocation();
+        int chunkX = loc.getBlockX() >> 4;
+        int chunkZ = loc.getBlockZ() >> 4;
+        int regionX = chunkX >> 5;
+        int regionZ = chunkZ >> 5;
 
-        return prev;
+        consumer.accept("folia:region", regionX + "_" + regionZ);
     }
 
+    @Override
+    public @NonNull ContextSet estimatePotentialContexts() {
+        return ImmutableContextSet.empty();
+    }
 }

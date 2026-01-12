@@ -28,7 +28,8 @@ package me.lucko.luckperms.common.command.access;
 import me.lucko.luckperms.common.sender.Sender;
 
 /**
- * An enumeration of the permissions required to execute built in LuckPerms commands.
+ * An enumeration of the permissions required to execute built in LuckPerms
+ * commands.
  */
 public enum CommandPermission {
 
@@ -156,19 +157,7 @@ public enum CommandPermission {
     LOG_GROUP_HISTORY("grouphistory", Type.LOG, true),
     LOG_TRACK_HISTORY("trackhistory", Type.LOG, true),
     LOG_SEARCH("search", Type.LOG, true),
-    LOG_NOTIFY("notify", Type.LOG, true),
-
-    SPONGE_PERMISSION_INFO("permission.info", Type.SPONGE, true),
-    SPONGE_PERMISSION_SET("permission.set", Type.SPONGE, false),
-    SPONGE_PERMISSION_CLEAR("permission.clear", Type.SPONGE, false),
-    SPONGE_PARENT_INFO("parent.info", Type.SPONGE, true),
-    SPONGE_PARENT_ADD("parent.add", Type.SPONGE, false),
-    SPONGE_PARENT_REMOVE("parent.remove", Type.SPONGE, false),
-    SPONGE_PARENT_CLEAR("parent.clear", Type.SPONGE, false),
-    SPONGE_OPTION_INFO("option.info", Type.SPONGE, true),
-    SPONGE_OPTION_SET("option.set", Type.SPONGE, false),
-    SPONGE_OPTION_UNSET("option.unset", Type.SPONGE, false),
-    SPONGE_OPTION_CLEAR("option.clear", Type.SPONGE, false);
+    LOG_NOTIFY("notify", Type.LOG, true);
 
     public static final String ROOT = "luckperms.";
 
@@ -217,8 +206,7 @@ public enum CommandPermission {
         USER("user"),
         GROUP("group"),
         TRACK("track"),
-        LOG("log"),
-        SPONGE("sponge");
+        LOG("log");
 
         private final String tag;
 

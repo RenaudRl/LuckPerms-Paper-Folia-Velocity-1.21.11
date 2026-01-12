@@ -50,34 +50,33 @@ public interface Platform {
      *
      * @return the unique connections
      */
-    @NonNull @Unmodifiable Set<UUID> getUniqueConnections();
+    @NonNull
+    @Unmodifiable
+    Set<UUID> getUniqueConnections();
 
     /**
      * Gets a {@link Collection} of all known permission strings.
      *
      * @return a collection of the known permissions
      */
-    @NonNull @Unmodifiable Collection<String> getKnownPermissions();
+    @NonNull
+    @Unmodifiable
+    Collection<String> getKnownPermissions();
 
     /**
      * Gets the time when the plugin first started.
      *
      * @return the enable time
      */
-    @NonNull Instant getStartTime();
+    @NonNull
+    Instant getStartTime();
 
     /**
      * Represents a type of platform which LuckPerms can run on.
      */
     enum Type {
         BUKKIT("Bukkit"),
-        BUNGEECORD("BungeeCord"),
-        SPONGE("Sponge"),
-        NUKKIT("Nukkit"),
         VELOCITY("Velocity"),
-        FABRIC("Fabric"),
-        NEOFORGE("NeoForge"),
-        FORGE("Forge"),
         STANDALONE("Standalone");
 
         private final String friendlyName;

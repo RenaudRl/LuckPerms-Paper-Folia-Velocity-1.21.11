@@ -25,10 +25,10 @@
 
 package me.lucko.luckperms.bukkit;
 
-import me.lucko.luckperms.bukkit.util.NullSafeConsoleCommandSender;
 import me.lucko.luckperms.common.loader.LoaderBootstrap;
 import me.lucko.luckperms.common.plugin.bootstrap.BootstrappedWithLoader;
 import me.lucko.luckperms.common.plugin.bootstrap.LuckPermsBootstrap;
+import me.lucko.luckperms.common.plugin.scheduler.SchedulerAdapter;
 import me.lucko.luckperms.common.plugin.classpath.ClassPathAppender;
 import me.lucko.luckperms.common.plugin.classpath.JarInJarClassPathAppender;
 import me.lucko.luckperms.common.plugin.logging.JavaPluginLogger;
@@ -66,12 +66,13 @@ public class LPBukkitBootstrap implements LuckPermsBootstrap, LoaderBootstrap, B
     /**
      * A scheduler adapter for the platform
      */
-    private final BukkitSchedulerAdapter schedulerAdapter;
+    private final SchedulerAdapter schedulerAdapter;
 
     /**
      * The plugin class path appender
      */
     private final ClassPathAppender classPathAppender;
+    private final boolean folia;
 
     /**
      * A null-safe console instance which delegates to the server logger
@@ -101,10 +102,19 @@ public class LPBukkitBootstrap implements LuckPermsBootstrap, LoaderBootstrap, B
     public LPBukkitBootstrap(JavaPlugin loader) {
         this.loader = loader;
 
+        boolean foliaSupported;
+        try {
+            Class.forName("io.papermc.paper.threadedregionscheduling.RegionScheduler");
+            foliaSupported = true;
+        } catch (ClassNotFoundException e) {
+            foliaSupported = false;
+        }
+
+        this.folia = foliaSupported;
         this.logger = new JavaPluginLogger(loader.getLogger());
-        this.schedulerAdapter = new BukkitSchedulerAdapter(this);
+        this.schedulerAdapter = this.folia ? new FoliaSchedulerAdapter(this) : new BukkitSchedulerAdapter(this);
         this.classPathAppender = new JarInJarClassPathAppender(getClass().getClassLoader());
-        this.console = new NullSafeConsoleCommandSender(getServer());
+        this.console = getServer().getConsoleSender();
         this.plugin = new LPBukkitPlugin(this);
     }
 
@@ -125,7 +135,7 @@ public class LPBukkitBootstrap implements LuckPermsBootstrap, LoaderBootstrap, B
     }
 
     @Override
-    public BukkitSchedulerAdapter getScheduler() {
+    public SchedulerAdapter getScheduler() {
         return this.schedulerAdapter;
     }
 
@@ -161,7 +171,8 @@ public class LPBukkitBootstrap implements LuckPermsBootstrap, LoaderBootstrap, B
             logger.severe("Your server version is not compatible with this build of LuckPerms. :(");
             logger.severe("");
             logger.severe("If your server is running 1.8, please update to 1.8.8 or higher.");
-            logger.severe("If your server is running 1.7.10, please download the Bukkit-Legacy version of LuckPerms from here:");
+            logger.severe(
+                    "If your server is running 1.7.10, please download the Bukkit-Legacy version of LuckPerms from here:");
             logger.severe("==> https://luckperms.net/download");
             logger.severe("----------------------------------------------------------------------");
             getServer().getPluginManager().disablePlugin(this.loader);
@@ -209,6 +220,14 @@ public class LPBukkitBootstrap implements LuckPermsBootstrap, LoaderBootstrap, B
         return this.serverStopping;
     }
 
+    public boolean isFolia() {
+        return this.folia;
+    }
+
+    public boolean isPaper() {
+        return isFolia() || getServerBrand().equalsIgnoreCase("Paper");
+    }
+
     // provide information about the plugin
 
     @Override
@@ -250,7 +269,7 @@ public class LPBukkitBootstrap implements LuckPermsBootstrap, LoaderBootstrap, B
 
     @Override
     public Optional<UUID> lookupUniqueId(String username) {
-        //noinspection deprecation
+        // noinspection deprecation
         return Optional.ofNullable(getServer().getOfflinePlayer(username)).map(OfflinePlayer::getUniqueId);
     }
 

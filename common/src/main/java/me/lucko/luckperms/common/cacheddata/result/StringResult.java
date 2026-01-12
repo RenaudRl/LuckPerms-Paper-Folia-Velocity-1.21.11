@@ -50,6 +50,10 @@ public final class StringResult<N extends Node> extends AbstractResult<String, N
         return this.result;
     }
 
+    public boolean isNull() {
+        return this == NULL_RESULT;
+    }
+
     public StringResult<N> copy() {
         return new StringResult<>(this.result, this.node, this.overriddenResult);
     }

@@ -1,59 +1,68 @@
-![](https://raw.githubusercontent.com/LuckPerms/branding/master/banner/banner.png "Banner")
-# LuckPerms
-[![Build Status](https://ci.lucko.me/job/LuckPerms/badge/icon)](https://ci.lucko.me/job/LuckPerms/)
-[![javadoc](https://javadoc.io/badge2/net.luckperms/api/javadoc.svg)](https://javadoc.io/doc/net.luckperms/api)
-[![Maven Central](https://img.shields.io/maven-metadata/v/https/repo1.maven.org/maven2/net/luckperms/api/maven-metadata.xml.svg?label=maven%20central&colorB=brightgreen)](https://search.maven.org/artifact/net.luckperms/api)
-[![Discord](https://img.shields.io/discord/241667244927483904.svg?label=discord&logo=discord)](https://discord.gg/luckperms)
+# LuckPerms-Folia (BTC Studio Fork)
 
-LuckPerms is a permissions plugin for Minecraft servers. It allows server admins to control what features players can use by creating groups and assigning permissions.
+![Java Version](https://img.shields.io/badge/Java-21-orange)
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![Target](https://img.shields.io/badge/Target-Paper%20/%20Folia-blue)
 
-The latest downloads, wiki & other useful links can be found on the project homepage at [luckperms.net](https://luckperms.net/).
+**LuckPerms-Folia** is a high-performance, streamlined fork of LuckPerms optimized specifically for **Paper/Folia 1.20+** and **Velocity 3.x**. 
 
-It is:
+This fork is maintained by **BTC Studio** and aims to provide the best possible permissions experience for modern Minecraft server environments by stripping away legacy platform support and integrating native Folia/Paper APIs.
 
-* **fast** - written with performance and scalability in mind.
-* **reliable** - trusted by thousands of server admins, and the largest of server networks.
-* **easy to use** - setup permissions using commands, directly in config files, or using the web editor.
-* **flexible** - supports a variety of data storage options, and works on lots of different server types.
-* **extensive** - a plethora of customization options and settings which can be changed to suit your server.
-* **free** - available for download and usage at no cost, and permissively licensed so it can remain free forever.
+---
 
-For more information, see the wiki article on [Why LuckPerms?](https://luckperms.net/wiki/Why-LuckPerms)
+## 🚀 Key Features
 
-## Building
-LuckPerms uses Gradle to handle dependencies & building.
+- **Native Folia Architecture**: Built from the ground up to support Folia's region-based multithreading.
+  - Utilizes `RegionScheduler` and `AsyncScheduler` for thread-safe operations.
+  - Performance-tuned database handling with **HikariCP 6.3.0**.
+- **Advanced Contexts**:
+  - `folia:region`: Define permissions based on the specific Folia region coordinates.
+  - `folia:tps`: Granular performance-based permissions (5s, 15s, 1m, 5m, 15m averages).
+- **MiniMessage Deep Integration**:
+  - Full support for <gradient>, <rainbow>, and other modern tags in prefixes, suffixes, and messages.
+  - Highly configurable conversion for legacy plugin compatibility.
+- **Paper Optimization**:
+  - Leverages `AsyncTabCompleteEvent` for non-blocking, lightning-fast command completions.
+  - Full support for Paper's native `Audience` and `Component` APIs.
 
-#### Requirements
-* Java 21 JDK or newer
-* Git
+---
 
-#### Compiling from source
+## ⚙️ Configuration
+
+We've added new configuration keys to `config.yml` specifically for this fork:
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `use-minimessage` | `true` | Enables MiniMessage parsing for all general plugin messages. |
+| `use-minimessage-for-metadata` | `true` | If enabled, prefixes and suffixes will be parsed via MiniMessage before being sent to the client. |
+
+---
+
+## 🛠 Building
+
+LuckPerms-Folia uses Gradle and requires **Java 21**.
+
 ```sh
-git clone https://github.com/LuckPerms/LuckPerms.git
-cd LuckPerms/
-./gradlew build
+# Clone the repository
+git clone https://github.com/RenaudRl/LuckPerms-Paper-Folia-Velocity-1.21.11.git
+cd LuckPerms-Paper-Folia-Velocity-1.21.11
+
+# Build the project
+./gradlew clean build -x test
 ```
 
-You can find the output jars in the `loader/build/libs` or `build/libs` directories.
+### Artifact Locations:
+- **Paper/Folia**: `bukkit/loader/build/libs/LuckPerms-Bukkit-5.5.24.jar`
+- **Velocity**: `velocity/build/libs/LuckPerms-Velocity-5.5.24.jar`
 
-## Tests
-There are some automated tests which run during each build.
+---
 
-* Unit tests are defined in [`common/src/test`](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/test)
-* Integration tests are defined in [`standalone/src/test`](https://github.com/LuckPerms/LuckPerms/tree/master/standalone/src/test).
+## 🤝 Support & Contribution
 
-## Contributing
-#### Pull Requests
-If you make any changes or improvements to the plugin which you think would be beneficial to others, please consider making a pull request to merge your changes back into the upstream project. (especially if your changes are bug fixes!)
+Support for this fork is provided by **BTC Studio**. Please do not report issues encountered in this fork to the original LuckPerms project.
 
-LuckPerms loosely follows the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html). Generally, try to copy the style of code found in the class you're editing. 
+- **Maintained by**: [BTC Studio](https://github.com/RenaudRl)
+- **Original Project**: [LuckPerms](https://github.com/LuckPerms/LuckPerms)
 
-#### Project Layout
-The project is split up into a few separate modules.
-
-* **API** - The public, semantically versioned API used by other plugins wishing to integrate with and retrieve data from LuckPerms. This module (for the most part) does not contain any implementation itself, and is provided by the plugin.
-* **Common** - The common module contains most of the code which implements the respective LuckPerms plugins. This abstract module reduces duplicated code throughout the project.
-* **Bukkit, BungeeCord, Fabric, Forge, Nukkit, Sponge & Velocity** - Each use the common module to implement plugins on the respective server platforms.
-
-## License
-LuckPerms is licensed under the permissive MIT license. Please see [`LICENSE.txt`](https://github.com/LuckPerms/LuckPerms/blob/master/LICENSE.txt) for more info.
+## 📜 License
+Licensed under the **MIT License**.
