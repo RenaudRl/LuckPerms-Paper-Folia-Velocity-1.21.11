@@ -34,7 +34,7 @@ import me.lucko.luckperms.common.command.tabcomplete.TabCompleter;
 import me.lucko.luckperms.common.command.tabcomplete.TabCompletions;
 import me.lucko.luckperms.common.command.utils.ArgumentList;
 import me.lucko.luckperms.common.command.utils.StorageAssistant;
-import me.lucko.luckperms.common.config.ConfigKeys;
+
 import me.lucko.luckperms.common.context.ImmutableContextSetImpl;
 import me.lucko.luckperms.common.locale.Message;
 import me.lucko.luckperms.common.model.Group;
@@ -54,11 +54,13 @@ import java.util.Locale;
 
 public class UserSwitchPrimaryGroup extends GenericChildCommand {
     public UserSwitchPrimaryGroup() {
-        super(CommandSpec.USER_SWITCHPRIMARYGROUP, "switchprimarygroup", CommandPermission.USER_PARENT_SWITCHPRIMARYGROUP, null, Predicates.not(1));
+        super(CommandSpec.USER_SWITCHPRIMARYGROUP, "switchprimarygroup",
+                CommandPermission.USER_PARENT_SWITCHPRIMARYGROUP, null, Predicates.not(1));
     }
 
     @Override
-    public void execute(LuckPermsPlugin plugin, Sender sender, PermissionHolder target, ArgumentList args, String label, CommandPermission permission) {
+    public void execute(LuckPermsPlugin plugin, Sender sender, PermissionHolder target, ArgumentList args, String label,
+            CommandPermission permission) {
         // cast to user
         // although this command is build as a sharedsubcommand,
         // it is only added to the listings for users.
@@ -67,11 +69,6 @@ public class UserSwitchPrimaryGroup extends GenericChildCommand {
         if (ArgumentPermissions.checkModifyPerms(plugin, sender, permission, user)) {
             Message.COMMAND_NO_PERMISSION.send(sender);
             return;
-        }
-
-        String opt = plugin.getConfiguration().get(ConfigKeys.PRIMARY_GROUP_CALCULATION_METHOD);
-        if (!opt.equals("stored")) {
-            Message.USER_PRIMARYGROUP_WARN_OPTION.send(sender, opt);
         }
 
         Group group = plugin.getGroupManager().getIfLoaded(args.get(0).toLowerCase(Locale.ROOT));
@@ -88,7 +85,8 @@ public class UserSwitchPrimaryGroup extends GenericChildCommand {
             return;
         }
 
-        if (user.getPrimaryGroup().getStoredValue().orElse(GroupManager.DEFAULT_GROUP_NAME).equalsIgnoreCase(group.getName())) {
+        if (user.getPrimaryGroup().getStoredValue().orElse(GroupManager.DEFAULT_GROUP_NAME)
+                .equalsIgnoreCase(group.getName())) {
             Message.USER_PRIMARYGROUP_ERROR_ALREADYHAS.send(sender, user, group);
             return;
         }

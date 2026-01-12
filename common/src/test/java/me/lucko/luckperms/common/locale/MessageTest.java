@@ -54,6 +54,7 @@ import net.luckperms.api.actionlog.Action;
 import net.luckperms.api.context.ContextSet;
 import net.luckperms.api.model.data.DataType;
 import net.luckperms.api.node.Node;
+import net.luckperms.api.node.ChatMetaType;
 import net.luckperms.api.node.metadata.types.InheritanceOriginMetadata;
 import net.luckperms.api.node.types.ChatMetaNode;
 import net.luckperms.api.node.types.InheritanceNode;
@@ -102,12 +103,10 @@ public class MessageTest {
             Message.Args3.class,
             Message.Args4.class,
             Message.Args5.class,
-            Message.Args6.class
-    );
+            Message.Args6.class);
 
     private static final Set<String> IGNORED_MISSING_TRANSLATION_KEYS = ImmutableSet.of(
-            "luckperms.command.misc.invalid-input-empty-stub"
-    );
+            "luckperms.command.misc.invalid-input-empty-stub");
 
     private static TranslationRegistry registry;
     private static Set<String> translationKeys;
@@ -164,14 +163,15 @@ public class MessageTest {
         List<Component> args = component.args();
         MessageFormat fmt = registry.translate(key, Locale.ENGLISH);
         assertNotNull(fmt);
-        assertEquals(fmt.getFormats().length, args.size(), "number of formats in translation for " + key + " does not match number of arguments");
+        assertEquals(fmt.getFormats().length, args.size(),
+                "number of formats in translation for " + key + " does not match number of arguments");
     }
 
     private static Iterable<Component> getNestedComponents(Component component) {
         return component.iterable(
                 ComponentIteratorType.BREADTH_FIRST,
-                ImmutableSet.of(ComponentIteratorFlag.INCLUDE_TRANSLATABLE_COMPONENT_ARGUMENTS, ComponentIteratorFlag.INCLUDE_HOVER_SHOW_TEXT_COMPONENT)
-        );
+                ImmutableSet.of(ComponentIteratorFlag.INCLUDE_TRANSLATABLE_COMPONENT_ARGUMENTS,
+                        ComponentIteratorFlag.INCLUDE_HOVER_SHOW_TEXT_COMPONENT));
     }
 
     private static Component buildMessage(Field field) {
@@ -236,16 +236,16 @@ public class MessageTest {
             return Meta.builder("stub", "stub")
                     .withMetadata(InheritanceOriginMetadata.KEY, new InheritanceOrigin(
                             new PermissionHolderIdentifier(HolderType.GROUP, "stub"),
-                            DataType.NORMAL
-                    ))
+                            DataType.NORMAL))
                     .build();
         } else if (clazz == ChatMetaNode.class) {
             return Prefix.builder("stub", 1)
                     .withMetadata(InheritanceOriginMetadata.KEY, new InheritanceOrigin(
                             new PermissionHolderIdentifier(HolderType.GROUP, "stub"),
-                            DataType.NORMAL
-                    ))
+                            DataType.NORMAL))
                     .build();
+        } else if (clazz == ChatMetaType.class) {
+            return ChatMetaType.PREFIX;
         } else if (clazz == ContextSet.class) {
             return ImmutableContextSetImpl.of("stub", "stub");
         } else if (clazz == Component.class) {

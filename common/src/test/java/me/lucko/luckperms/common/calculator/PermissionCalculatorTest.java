@@ -33,7 +33,6 @@ import me.lucko.luckperms.common.calculator.processor.AbstractOverrideWildcardPr
 import me.lucko.luckperms.common.calculator.processor.DirectProcessor;
 import me.lucko.luckperms.common.calculator.processor.PermissionProcessor;
 import me.lucko.luckperms.common.calculator.processor.RegexProcessor;
-import me.lucko.luckperms.common.calculator.processor.SpongeWildcardProcessor;
 import me.lucko.luckperms.common.calculator.processor.WildcardProcessor;
 import me.lucko.luckperms.common.model.HolderType;
 import me.lucko.luckperms.common.node.factory.NodeBuilders;
@@ -69,8 +68,7 @@ public class PermissionCalculatorTest {
     private static final CacheMetadata MOCK_METADATA = new CacheMetadata(
             HolderType.GROUP,
             VerboseCheckTarget.of(VerboseCheckTarget.GROUP_TYPE, "test"),
-            QueryOptionsImpl.DEFAULT_CONTEXTUAL
-    );
+            QueryOptionsImpl.DEFAULT_CONTEXTUAL);
 
     private static final Map<String, Node> EXAMPLE_PERMISSIONS = ImmutableMap.<String, Boolean>builder()
             // direct
@@ -97,10 +95,10 @@ public class PermissionCalculatorTest {
             .build().entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
-                    e -> NodeBuilders.determineMostApplicable(e.getKey()).value(e.getValue()).build()
-            ));
+                    e -> NodeBuilders.determineMostApplicable(e.getKey()).value(e.getValue()).build()));
 
-    @Mock private LuckPermsPlugin plugin;
+    @Mock
+    private LuckPermsPlugin plugin;
 
     @BeforeEach
     public void setupMocks() {
@@ -170,31 +168,6 @@ public class PermissionCalculatorTest {
 
     @ParameterizedTest
     @CsvSource({
-            "one, true, direct",
-            "one.test, true, wildcard",
-            "one.two, true, direct",
-            "one.two.test, true, wildcard",
-    })
-    public void testSpongeWildcard(String node, boolean expected, String type) {
-        PermissionCalculator calculator = createCalculator(new DirectProcessor(), new SpongeWildcardProcessor());
-        calculator.setSourcePermissions(EXAMPLE_PERMISSIONS);
-
-        TristateResult result = calculator.checkPermission(node, CheckOrigin.INTERNAL);
-        assertEquals(Tristate.of(expected), result.result());
-        assertNull(result.overriddenResult());
-        assertNotNull(result.node());
-
-        if (type.equals("direct")) {
-            assertSame(DirectProcessor.class, result.processorClass());
-        } else if (type.equals("wildcard")) {
-            assertSame(SpongeWildcardProcessor.class, result.processorClass());
-        } else {
-            throw new AssertionError();
-        }
-    }
-
-    @ParameterizedTest
-    @CsvSource({
             "hello, UNDEFINED",
             "hello1, TRUE",
             "hello123, TRUE",
@@ -234,7 +207,8 @@ public class PermissionCalculatorTest {
             }
         };
 
-        PermissionCalculator calculator = createCalculator(new DirectProcessor(), new WildcardProcessor(), overrideProcessor);
+        PermissionCalculator calculator = createCalculator(new DirectProcessor(), new WildcardProcessor(),
+                overrideProcessor);
         calculator.setSourcePermissions(EXAMPLE_PERMISSIONS);
 
         TristateResult result = calculator.checkPermission("overridetest.test", CheckOrigin.INTERNAL);

@@ -67,11 +67,7 @@ public class CommandPermissionTest {
             CommandPermission.LOG_GROUP_HISTORY,
             CommandPermission.LOG_TRACK_HISTORY,
             CommandPermission.LOG_SEARCH,
-            CommandPermission.LOG_NOTIFY,
-            CommandPermission.SPONGE_PERMISSION_INFO,
-            CommandPermission.SPONGE_PARENT_INFO,
-            CommandPermission.SPONGE_OPTION_INFO
-    );
+            CommandPermission.LOG_NOTIFY);
 
     @ParameterizedTest
     @EnumSource(CommandPermission.class)

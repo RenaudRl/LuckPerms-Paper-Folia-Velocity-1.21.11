@@ -282,14 +282,6 @@ public interface Message {
                         .color(AQUA)
                         .append(FULL_STOP));
 
-        Args0 OP_DISABLED_SPONGE = () -> prefixed(translatable()
-                        // "&2Please note that Server Operator status has no effect on Sponge permission
-                        // checks when a permission plugin is installed, you must edit user data
-                        // directly."
-                        .key("luckperms.opsystem.sponge-warning")
-                        .color(DARK_GREEN)
-                        .append(FULL_STOP));
-
         Args1<LoggedAction> LOG = action -> joinNewline(
                         // "&3LOG &3&l> &8(&e{}&8) [&a{}&8] (&b{}&8)"
                         // "&3LOG &3&l> &f{}"
@@ -3304,14 +3296,6 @@ public interface Message {
                         .args(
                                         text().color(AQUA).append(user.getFormattedDisplayName()),
                                         text().color(AQUA).append(group.getFormattedDisplayName()))
-                        .append(FULL_STOP));
-
-        Args1<String> USER_PRIMARYGROUP_WARN_OPTION = option -> prefixed(translatable()
-                        // "&aWarning: The primary group calculation method being used by this server
-                        // ({}) may not reflect this change."
-                        .key("luckperms.command.user.primarygroup.warn-option")
-                        .color(GREEN)
-                        .args(text(option))
                         .append(FULL_STOP));
 
         Args2<User, Group> USER_PRIMARYGROUP_ERROR_ALREADYHAS = (user, group) -> prefixed(translatable()
