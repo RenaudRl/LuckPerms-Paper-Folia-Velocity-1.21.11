@@ -4,7 +4,7 @@
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Target](https://img.shields.io/badge/Target-Paper%20/%20Folia%20/%20Velocity%20-blue)
 
-**LuckPerms-Folia** is a high-performance, streamlined fork of **LuckPerms**, engineered specifically for **BTC Studio** infrastructure. It represents a modern approach to permission management, specifically optimized for **Paper/Folia 1.20+** and **Velocity 3.x** by removing legacy baggage and focusing on native multi-threaded performance.
+**LuckPerms-Folia** is a high-performance, streamlined fork of **LuckPerms**, engineered specifically for **BTC Studio** infrastructure. It represents a modern approach to permission management, specifically optimized for **Paper/Folia 1.21.11+** and **Velocity 3.x** by removing legacy baggage and focusing on native multi-threaded performance.
 
 > [!WARNING]
 > **DEVELOPER COMPATIBILITY NOTICE**
