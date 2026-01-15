@@ -112,6 +112,13 @@ public class LPBukkitBootstrap implements LuckPermsBootstrap, LoaderBootstrap, B
 
         this.folia = foliaSupported;
         this.logger = new JavaPluginLogger(loader.getLogger());
+
+        if (isBTCCore()) {
+            this.logger.info("Running on BTC-CORE (High Performance Fork)");
+        } else if (isASPaper()) {
+            this.logger.info("Running on Advanced Slime Paper (ASPaper)");
+        }
+
         this.schedulerAdapter = this.folia ? new FoliaSchedulerAdapter(this) : new BukkitSchedulerAdapter(this);
         this.classPathAppender = new JarInJarClassPathAppender(getClass().getClassLoader());
         this.console = getServer().getConsoleSender();
@@ -225,7 +232,24 @@ public class LPBukkitBootstrap implements LuckPermsBootstrap, LoaderBootstrap, B
     }
 
     public boolean isPaper() {
-        return isFolia() || getServerBrand().equalsIgnoreCase("Paper");
+        return isFolia() || isASPaper() || isBTCCore() || getServerBrand().equalsIgnoreCase("Paper");
+    }
+
+    public boolean isASPaper() {
+        return classExists("com.infernalsuite.asp.api.AdvancedSlimePaperAPI");
+    }
+
+    public boolean isBTCCore() {
+        return classExists("com.infernalsuite.asp.config.BTCCoreConfig");
+    }
+
+    private static boolean classExists(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     // provide information about the plugin

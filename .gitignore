@@ -78,3 +78,8 @@ ehthumbs_vista.db
 [Dd]esktop.ini
 $RECYCLE.BIN/
 *.lnk
+.agent/rules/rule.md
+Docs/advancedslimepaper api.txt
+Docs/btccore-api.txt
+Docs/folia api.txt
+Docs/paper api 1.21.11.txt

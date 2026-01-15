@@ -2,9 +2,9 @@
 
 ![Java Version](https://img.shields.io/badge/Java-21-orange)
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![Target](https://img.shields.io/badge/Target-Paper%20/%20Folia%20/%20Velocity%20-blue)
+![Target](https://img.shields.io/badge/Target-Paper%20/%20Folia%20/%20Velocity%20/%20BTC--CORE-blue)
 
-**LuckPerms-Folia** is a high-performance, streamlined fork of **LuckPerms**, engineered specifically for **BTC Studio** infrastructure. It represents a modern approach to permission management, specifically optimized for **Paper/Folia 1.21.11+** and **Velocity 3.x** by removing legacy baggage and focusing on native multi-threaded performance.
+**LuckPerms-Folia** is a high-performance, streamlined fork of **LuckPerms**, engineered specifically for **BTC Studio** infrastructure and the **BTC-CORE** server fork. It represents a modern approach to permission management, specifically optimized for **BTC-CORE (Paper/Folia 1.21.11+)** and **Velocity 3.x** by removing legacy baggage and focusing on native multi-threaded performance.
 
 > [!WARNING]
 > **DEVELOPER COMPATIBILITY NOTICE**
@@ -17,6 +17,7 @@
 ### ⚡ Concurrency & Architecture (Folia Integration)
 - **Native Folia Support**: Fully integrated with Folia's `RegionScheduler` and `AsyncScheduler`, ensuring thread-safe permission checks and data handling.
 - **Regionized Logic**: Permission contexts aware of Folia regions, allowing for granular control in multi-threaded environments.
+- **BTC-CORE / ASPaper Optimization**: Native compatibility with BTC-CORE's high-performance architecture, ensuring zero impact on the fork's optimized tick loops and async systems.
 - **HikariCP 6.3.0**: Upgraded connection pooling for ultra-fast, non-blocking database operations.
 
 ### 🎨 Modern Formatting (MiniMessage)
